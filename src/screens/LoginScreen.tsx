@@ -1,11 +1,12 @@
 import React, { FunctionComponent, useContext } from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { TextInput } from 'react-native';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { TextInput, Button} from 'react-native';
+import {  StyleSheet, Text, View } from 'react-native';
+
 import {Input} from 'react-native-elements';
 import AppContext from '../contexts/AppContext';
-import { initDb, setUpData, write } from '../firebase/Firebase';
+import { initDb, registration, setUpData, signIn, write } from '../firebase/Firebase';
 import { LoginScreenNavigationProp } from '../types';
 
 const LoginScreen: FunctionComponent<LoginScreenNavigationProp> = ({ route, navigation }) => {
@@ -20,19 +21,30 @@ const LoginScreen: FunctionComponent<LoginScreenNavigationProp> = ({ route, navi
 	}, []);
 
 	const { setUser } = useContext(AppContext);
-	const [username, setUsername] = useState({name: ''});
-	const [password, setPassword] = useState({name: ''})
+	const [username, setUsername] = useState('');
+	const [password, setPassword] = useState('')
 	return (
 		<View style={styles.container}>
 			<Text style={{fontSize: 20, fontWeight: 'bold', color: 'orange', marginBottom: 50}}>Login To Beer Me!</Text>
 			<Input placeholder="email" style={{borderBottomWidth: 2, borderLeftWidth: 2, borderRightWidth: 2, borderTopWidth: 2, width: 250, height: 30}}
-		
-			></Input>
-			<Input placeholder="password" style={{borderBottomWidth: 2, borderLeftWidth: 2, borderRightWidth: 2, borderTopWidth: 2, width: 250, height: 30}}></Input>
-			<Button title={'Login in'} onPress={() => 
+			onChangeText={setUsername}
+			value={username}
+			/>
+			<Input placeholder="password" style={{borderBottomWidth: 2, borderLeftWidth: 2, borderRightWidth: 2, borderTopWidth: 2, width: 250, height: 30}}
+			secureTextEntry={true}
+			onChangeText={setPassword}
+			value={password}/>
+			<Button title={'Login in'} onPress={() => {
+				signIn(username, password)
 				setUser('TestUser')
+			}
+
 			} />
-			<Button title={'Sign up'} onPress={() => setUser('TestUser')}  />
+			<Button title={'Sign up'} onPress={() =>{ 
+				//setUser('TestUser')
+				registration(username, password)
+			}
+			  }  />
 		</View>
 	);
 };
