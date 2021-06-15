@@ -21,12 +21,13 @@ const MainRouter: FunctionComponent = () => {
 					headerTintColor: '#fff'
 				}}
 			>
-				{user === '' ? (
+				{user === null ? (
 					<Stack.Screen
 						name='Login'
 						component={LoginScreen}
 						options={{
-							title: 'Beer Me'
+							title: 'Beer Me',
+							cardStyle: { backgroundColor: '#3d3' }
 						}}
 					/>
 				) : (

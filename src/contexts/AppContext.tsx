@@ -1,8 +1,21 @@
-import React, { Dispatch, FunctionComponent, SetStateAction, useState } from 'react';
+import firebase from 'firebase';
+import React, { FunctionComponent, useEffect, useState } from 'react';
+import { fb } from '../api/firebase/Firebase';
+
+const theme = {
+	primary: '#121212',
+	background: '#c4c4c4',
+	elevation1: '#E4E4E4',
+	elevation2: '#F0F2F4',
+	elevation3: '#F3F3F3',
+	beerBackground: ' #F5B160'
+};
+
+type FirebaseUser = firebase.User | null;
 
 type AppContextType = {
-	user: string;
-	setUser: Dispatch<SetStateAction<string>>;
+	user: FirebaseUser;
+	theme: typeof theme;
 };
 
 // Sets the correct types for context whenever it's imported
@@ -11,9 +24,18 @@ export default AppContext;
 
 // Provides values in all children components
 const AppProvider: FunctionComponent = ({ children }) => {
-	const [user, setUser] = useState<string>('');
+	const [user, setUser] = useState<FirebaseUser>(null);
 
-	return <AppContext.Provider value={{ user, setUser }}>{children}</AppContext.Provider>;
+	useEffect(() => {
+		const subscriber = fb.auth().onAuthStateChanged(onAuthStateChanged);
+		return subscriber; // unsubscribe on unmount
+	}, []);
+
+	const onAuthStateChanged = (user: FirebaseUser) => {
+		setUser(user);
+	};
+
+	return <AppContext.Provider value={{ user, theme }}>{children}</AppContext.Provider>;
 };
 
 export { AppProvider };
