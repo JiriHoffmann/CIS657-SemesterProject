@@ -33,9 +33,13 @@ const LoginScreen: FunctionComponent<LoginScreenNavigationProp> = ({ route, navi
 			<Input placeholder="password" style={{borderBottomWidth: 2, borderLeftWidth: 2, borderRightWidth: 2, borderTopWidth: 2, width: 250, height: 30}}
 			secureTextEntry={true}
 			onChangeText={setPassword}
-			value={password}/>
+			value={password}
+			/>
 			<Button title={'Login in'} onPress={() => {
-				signIn(username, password)
+				try{signIn(username, password)}
+				catch{
+					
+				}
 				setUser('TestUser')
 			}
 

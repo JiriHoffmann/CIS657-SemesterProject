@@ -28,14 +28,15 @@ export async function registration(email: any, password: any) {
   }
 
   export async function signIn(email: any, password: any) {
-    var hadError = false
     try {
      await firebase
         .auth()
         .signInWithEmailAndPassword(email, password);
         console.log("signing in")
+        return "success"
     } catch (err) {
       console.log(err)
+      return "error"
     }
   }
 

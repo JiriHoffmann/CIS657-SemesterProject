@@ -16,7 +16,7 @@ const MainRouter: FunctionComponent = () => {
 			<Stack.Navigator
 				screenOptions={{
 					headerStyle: {
-						backgroundColor: '#2565A4'
+						backgroundColor: '#fca605'
 					},
 					headerTintColor: '#fff'
 				}}
