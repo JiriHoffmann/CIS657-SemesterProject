@@ -4,7 +4,7 @@ import { MapScreenNavigationProp } from '../types';
 import { TextInput, Button} from 'react-native';
 import { getMap } from '../api/API';
 import MapView from 'react-native-maps';
-import { registration } from '../firebase/Firebase';
+
 
 
 const MapScreen: FunctionComponent<MapScreenNavigationProp> = ({ route, navigation }) => {
