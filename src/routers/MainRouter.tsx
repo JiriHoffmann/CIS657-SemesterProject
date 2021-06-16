@@ -2,7 +2,7 @@ import React, { FunctionComponent, useContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import AppContext from '../contexts/AppContext';
-import { LoginScreen } from '../screens';
+import { LoginScreen, PlaceDetailScreen } from '../screens';
 import { RootStackParamList } from '../types';
 import { BottomTabRouter } from './BottomTabRouter';
 
@@ -14,6 +14,7 @@ const MainRouter: FunctionComponent = () => {
 	return (
 		<NavigationContainer>
 			<Stack.Navigator
+				mode='modal'
 				screenOptions={{
 					headerStyle: {
 						backgroundColor: '#fca605'
@@ -31,7 +32,10 @@ const MainRouter: FunctionComponent = () => {
 						}}
 					/>
 				) : (
-					<Stack.Screen name='BottomTabs' options={{title: "Beer Me Map"}} component={BottomTabRouter} />
+					<>
+						<Stack.Screen name='BottomTabs' options={{ title: 'Beer Me' }} component={BottomTabRouter} />
+						<Stack.Screen name='PlaceDetail' component={PlaceDetailScreen} />
+					</>
 				)}
 			</Stack.Navigator>
 		</NavigationContainer>
