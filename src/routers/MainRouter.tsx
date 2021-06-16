@@ -9,7 +9,7 @@ import { BottomTabRouter } from './BottomTabRouter';
 const Stack = createStackNavigator<RootStackParamList>();
 
 const MainRouter: FunctionComponent = () => {
-	const { user } = useContext(AppContext);
+	const { user, theme } = useContext(AppContext);
 
 	return (
 		<NavigationContainer>
@@ -17,7 +17,7 @@ const MainRouter: FunctionComponent = () => {
 				mode='modal'
 				screenOptions={{
 					headerStyle: {
-						backgroundColor: '#fca605'
+						backgroundColor: theme.beerColor
 					},
 					headerTintColor: '#fff'
 				}}
@@ -27,8 +27,7 @@ const MainRouter: FunctionComponent = () => {
 						name='Login'
 						component={LoginScreen}
 						options={{
-							title: 'Beer Me',
-							cardStyle: { backgroundColor: '#3d3' }
+							title: 'Beer Me'
 						}}
 					/>
 				) : (

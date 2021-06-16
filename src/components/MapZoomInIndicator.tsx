@@ -1,14 +1,7 @@
-import React, { FunctionComponent, useContext, useEffect } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import { StyleProp, ViewStyle } from 'react-native';
-import { StyleSheet, Text, View } from 'react-native';
-import Animated, {
-	cos,
-	interpolate,
-	useAnimatedStyle,
-	useSharedValue,
-	withRepeat,
-	withTiming
-} from 'react-native-reanimated';
+import { StyleSheet, Text } from 'react-native';
+import Animated, { interpolate, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 interface Props {
 	show: boolean;

@@ -3,20 +3,20 @@ import firebase from 'firebase';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { fb } from '../api/firebase/Firebase';
 
+type FirebaseUser = firebase.User | null;
+
+type AppContextType = {
+	user: FirebaseUser;
+	theme: typeof theme;
+};
+
 const theme = {
 	primary: '#121212',
 	background: '#c4c4c4',
 	elevation1: '#E4E4E4',
 	elevation2: '#F0F2F4',
 	elevation3: '#F3F3F3',
-	beerBackground: ' #F5B160'
-};
-
-type FirebaseUser = firebase.User | null;
-
-type AppContextType = {
-	user: FirebaseUser;
-	theme: typeof theme;
+	beerColor: '#fca605'
 };
 
 // Sets the correct types for context whenever it's imported

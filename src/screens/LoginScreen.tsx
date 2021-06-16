@@ -1,9 +1,7 @@
 import React, { FunctionComponent, useContext } from 'react';
-import { useEffect } from 'react';
 import { useState } from 'react';
-import { Button, TextInput, TouchableOpacity } from 'react-native';
+import { TextInput, TouchableOpacity } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native';
-import { Input } from 'react-native-elements';
 import { register, signIn } from '../api/firebase/Firebase';
 import { LoadingIndicator } from '../components';
 import AppContext from '../contexts/AppContext';
@@ -50,9 +48,8 @@ const LoginScreen: FunctionComponent<LoginScreenNavigationProp> = ({ route, navi
 				onChangeText={setPassword}
 				value={password}
 			/>
-
 			<View style={styles.buttonContainer}>
-				<View style={{ ...styles.buttons, backgroundColor: '#F5B160' }}>
+				<View style={{ ...styles.buttons, backgroundColor: theme.beerColor }}>
 					<TouchableOpacity
 						disabled={signUpLoading || logInLoading}
 						onPress={handleLogInPress}
@@ -62,7 +59,7 @@ const LoginScreen: FunctionComponent<LoginScreenNavigationProp> = ({ route, navi
 					</TouchableOpacity>
 				</View>
 
-				<View style={{ ...styles.buttons, backgroundColor: '#F5B160' }}>
+				<View style={{ ...styles.buttons, backgroundColor: theme.beerColor }}>
 					<TouchableOpacity
 						disabled={signUpLoading || logInLoading}
 						onPress={handleSignUpPress}

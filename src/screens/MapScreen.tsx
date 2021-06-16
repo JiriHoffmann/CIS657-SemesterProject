@@ -1,11 +1,13 @@
 import React, { FunctionComponent, useContext, useEffect, useRef, useState } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import MapView, { Marker, Region } from 'react-native-maps';
+import { MaterialIcons } from '@expo/vector-icons';
 import { fetchBeerLocations } from '../api/beermapping/API';
+import { LocationSearchButton } from '../components/LocationSearchButton';
 import { MapZoomInIndicator } from '../components/MapZoomInIndicator';
 import AppContext from '../contexts/AppContext';
 import { MapScreenNavigationProp } from '../types';
-import { BeerLocation } from '../types/BeerMapping';
+import { BeerLocation, UserLocation } from '../types/BeerMapping';
 
 const INITIAL_REGION = {
 	latitude: 42.460584030103824,
@@ -17,16 +19,22 @@ const INITIAL_REGION = {
 const MapScreen: FunctionComponent<MapScreenNavigationProp> = ({ route, navigation }) => {
 	const mapRef = useRef<MapView>(null);
 	const { theme } = useContext(AppContext);
+
 	const [isZoomedIn, setIsZoomedIn] = useState(false);
 	const [mapRegion, setMapRegion] = useState<Region>(INITIAL_REGION);
 	const [beerLocations, setBeerLocations] = useState<BeerLocation[]>([]);
+	const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
 
 	useEffect(() => {
-		// getNewBeerLocations(mapRegion.latitude, mapRegion.longitude);
-	}, []);
+		if (userLocation) {
+			getNewBeerLocations(mapRegion.latitude, mapRegion.longitude);
+			animateToLocation(userLocation.latitude, userLocation.longitude);
+		}
+	}, [userLocation]);
 
 	const getNewBeerLocations = async (lat: any, long: any) => {
 		const newLocations = await fetchBeerLocations(lat, long);
+		console.log(newLocations);
 		setBeerLocations(newLocations);
 	};
 
@@ -36,7 +44,7 @@ const MapScreen: FunctionComponent<MapScreenNavigationProp> = ({ route, navigati
 
 	const onRegionChangeComplete = (region: Region) => {
 		// only fetch new locations when zoomed in
-		if (region.latitudeDelta < 0.3 && region.longitudeDelta < 0.3) {
+		if (region.latitudeDelta < 0.4 && region.longitudeDelta < 0.4) {
 			setIsZoomedIn(true);
 			getNewBeerLocations(region.latitude, region.longitude);
 		} else {
@@ -57,8 +65,8 @@ const MapScreen: FunctionComponent<MapScreenNavigationProp> = ({ route, navigati
 			let region = {
 				longitude: longitude,
 				latitude: latitude,
-				longitudeDelta: 0.1,
-				latitudeDelta: 0.1
+				longitudeDelta: 0.18,
+				latitudeDelta: 0.18
 			};
 			mapRef.current.animateToRegion(region, 500);
 		}
@@ -72,8 +80,6 @@ const MapScreen: FunctionComponent<MapScreenNavigationProp> = ({ route, navigati
 				initialRegion={INITIAL_REGION}
 				onRegionChangeComplete={onRegionChangeComplete}
 				onRegionChange={onRegionChange}
-				onUserLocationChange={(e) => console.log(e)}
-				showsUserLocation={true}
 				loadingEnabled={true}
 			>
 				{/* LOCATION MARKERS */}
@@ -87,10 +93,34 @@ const MapScreen: FunctionComponent<MapScreenNavigationProp> = ({ route, navigati
 						onCalloutPress={() => handleCalloutPress(loc)}
 					/>
 				))}
+
+				{/* USER LOCATION MARKER */}
+				{userLocation && (
+					<Marker coordinate={{ latitude: userLocation.latitude, longitude: userLocation.longitude }}>
+						<MaterialIcons name={'person-pin-circle'} size={40} color={theme.beerColor} />
+					</Marker>
+				)}
 			</MapView>
 			<MapZoomInIndicator
 				show={!isZoomedIn}
 				style={{ ...styles.zoomInIndicator, backgroundColor: theme.elevation3 }}
+			/>
+			<LocationSearchButton
+				style={{
+					backgroundColor: theme.elevation2,
+					position: 'absolute',
+					bottom: 20,
+					right: 10,
+					shadowColor: '#000',
+					shadowOffset: {
+						width: 0,
+						height: 2
+					},
+					shadowOpacity: 0.25,
+					shadowRadius: 3.84,
+					elevation: 5
+				}}
+				locationCallback={setUserLocation}
 			/>
 		</View>
 	);
@@ -118,10 +148,10 @@ const styles = StyleSheet.create({
 		},
 		shadowOpacity: 0.25,
 		shadowRadius: 3.84,
+		elevation: 5,
 		paddingHorizontal: 15,
 		paddingVertical: 5,
-		borderRadius: 20,
-		elevation: 5
+		borderRadius: 20
 	}
 });
 

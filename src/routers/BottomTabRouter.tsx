@@ -1,17 +1,16 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useContext } from 'react';
 import { MaterialIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer } from '@react-navigation/native';
+import AppContext from '../contexts/AppContext';
 import { FavouritesScreen, MapScreen, SettingsScreen } from '../screens';
 import { MessagesScreen } from '../screens/MessagesScreen';
 import { BottomTabParamList } from '../types';
 
-const ACTIVE_COLOR = '#B5490E';
-const INACTIVE_COLOR = 'gray';
-
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
 const BottomTabRouter: FunctionComponent = () => {
+	const { theme } = useContext(AppContext);
+
 	return (
 		<Tab.Navigator
 			screenOptions={({ route }) => ({
@@ -29,13 +28,13 @@ const BottomTabRouter: FunctionComponent = () => {
 
 					return (
 						// @ts-ignore
-						<MaterialIcons name={iconName} size={30} color={focused ? ACTIVE_COLOR : INACTIVE_COLOR} />
+						<MaterialIcons name={iconName} size={30} color={focused ? theme.beerColor : 'gray'} />
 					);
 				}
 			})}
 			tabBarOptions={{
-				activeTintColor: ACTIVE_COLOR,
-				inactiveTintColor: INACTIVE_COLOR
+				activeTintColor: theme.beerColor,
+				inactiveTintColor: 'gray'
 			}}
 		>
 			<Tab.Screen name='Map' component={MapScreen} />
