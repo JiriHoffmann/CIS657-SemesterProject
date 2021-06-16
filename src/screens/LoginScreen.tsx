@@ -53,13 +53,21 @@ const LoginScreen: FunctionComponent<LoginScreenNavigationProp> = ({ route, navi
 
 			<View style={styles.buttonContainer}>
 				<View style={{ ...styles.buttons, backgroundColor: '#F5B160' }}>
-					<TouchableOpacity disabled={signUpLoading || logInLoading} onPress={handleLogInPress}>
+					<TouchableOpacity
+						disabled={signUpLoading || logInLoading}
+						onPress={handleLogInPress}
+						style={styles.touchableButtons}
+					>
 						{logInLoading ? <LoadingIndicator /> : <Text>Login in</Text>}
 					</TouchableOpacity>
 				</View>
 
 				<View style={{ ...styles.buttons, backgroundColor: '#F5B160' }}>
-					<TouchableOpacity disabled={signUpLoading || logInLoading} onPress={handleSignUpPress}>
+					<TouchableOpacity
+						disabled={signUpLoading || logInLoading}
+						onPress={handleSignUpPress}
+						style={styles.touchableButtons}
+					>
 						{signUpLoading ? <LoadingIndicator /> : <Text>Sign up</Text>}
 					</TouchableOpacity>
 				</View>
@@ -95,6 +103,12 @@ const styles = StyleSheet.create({
 		width: '86%',
 		flexDirection: 'row',
 		marginTop: 20
+	},
+	touchableButtons: {
+		width: '100%',
+		height: '100%',
+		justifyContent: 'center',
+		alignItems: 'center'
 	},
 	buttons: {
 		flex: 1,
