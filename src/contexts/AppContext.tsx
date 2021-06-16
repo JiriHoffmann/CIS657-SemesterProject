@@ -1,3 +1,4 @@
+import * as SplashScreen from 'expo-splash-screen';
 import firebase from 'firebase';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { fb } from '../api/firebase/Firebase';
@@ -25,6 +26,7 @@ export default AppContext;
 // Provides values in all children components
 const AppProvider: FunctionComponent = ({ children }) => {
 	const [user, setUser] = useState<FirebaseUser>(null);
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		const subscriber = fb.auth().onAuthStateChanged(onAuthStateChanged);
@@ -32,6 +34,12 @@ const AppProvider: FunctionComponent = ({ children }) => {
 	}, []);
 
 	const onAuthStateChanged = (user: FirebaseUser) => {
+		if (loading) {
+			setTimeout(() => {
+				SplashScreen.hideAsync();
+			}, 500);
+			setLoading(false);
+		}
 		setUser(user);
 	};
 
