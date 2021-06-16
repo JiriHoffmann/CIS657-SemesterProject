@@ -16,11 +16,12 @@ BrewServer.interceptors.request.use(
     }
 );
 
-export const getMap = async (lat: any, lon: any, callback: any) => {
+export const getMap = async (lat: any, lon: any) => {
     const response = await BrewServer.get(
-        `?lat=${lat}&lng=${lon}&radius=7.836078467420782`
-    ).then()
-    callback(response.data)
+        `?lat=${lat}&lng=${lon}&radius=7.5`
+        
+    ).then(res=>res.data)
+    return response
 }
 
 

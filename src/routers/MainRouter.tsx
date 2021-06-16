@@ -31,7 +31,7 @@ const MainRouter: FunctionComponent = () => {
 						}}
 					/>
 				) : (
-					<Stack.Screen name='BottomTabs' component={BottomTabRouter} />
+					<Stack.Screen name='BottomTabs' options={{title: "Beer Me Map"}} component={BottomTabRouter} />
 				)}
 			</Stack.Navigator>
 		</NavigationContainer>
