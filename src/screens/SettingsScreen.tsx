@@ -1,9 +1,9 @@
 import React, { FunctionComponent, useContext, useEffect, useState } from 'react';
 import { Button, Keyboard, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { logOut } from '../api/firebase/Firebase';
+import { logOut } from '../api/firebase/login';
 import AppContext from '../contexts/AppContext';
 import { MapScreenNavigationProp } from '../types';
-import { LoadingIndicator } from '../components';
+import { LoadingIndicator } from'../components/LoadingIndicator';
 
 const SettingsScreen: FunctionComponent<MapScreenNavigationProp> = ({ route, navigation }) => {
 const { theme } = useContext(AppContext);
@@ -17,7 +17,7 @@ const handleLogOutPress = async () => {
 	return (
 		<View style={styles.buttonContainer}>
 
-			
+
 
 			<View style={{ ...styles.buttons, backgroundColor: theme.beerColor }}>
 				<TouchableOpacity

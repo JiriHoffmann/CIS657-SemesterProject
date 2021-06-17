@@ -1,32 +1,46 @@
 {
-  "expo": {
-    "name": "beerme",
-    "slug": "beerme",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      }
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    }
-  }
+	"expo": {
+		"name": "beerme",
+		"slug": "beerme",
+		"version": "1.0.0",
+		"orientation": "portrait",
+		"icon": "./assets/icon.png",
+		"splash": {
+			"image": "./assets/splash.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#ffffff"
+		},
+		"updates": {
+			"fallbackToCacheTimeout": 0
+		},
+		"assetBundlePatterns": ["**/*"],
+		"ios": {
+			"supportsTablet": true,
+			"bundleIdentifier": "com.beerme",
+			"googleServicesFile": "./GoogleService-Info.plist"
+		},
+		"android": {
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/adaptive-icon.png",
+				"backgroundColor": "#FFFFFF"
+			},
+			"googleServicesFile": "./google-services.json",
+			"softwareKeyboardLayoutMode": "pan",
+			"package": "com.beerme"
+		},
+		"web": {
+			"favicon": "./assets/favicon.png",
+			"config": {
+				"firebase": {
+					"apiKey": "AIzaSyAZC3Ohudeg1ZHojLYLW9EZ6hIpcuQ4sCU",
+					"authDomain": "beer-me-417bb.firebaseapp.com",
+					"projectId": "beer-me-417bb",
+					"storageBucket": "beer-me-417bb.appspot.com",
+					"messagingSenderId": "913816018538",
+					"appId": "1:913816018538:web:c0d700079ee09677a8f413",
+					"measurementId": "G-HF0S8042X1"
+				}
+			}
+		}
+	}
 }

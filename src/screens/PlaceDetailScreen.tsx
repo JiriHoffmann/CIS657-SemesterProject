@@ -1,11 +1,11 @@
-import React, { FunctionComponent, useLayoutEffect } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { PlaceDetailScreenNavigationProp } from '../types';
 
 const PlaceDetailScreen: FunctionComponent<PlaceDetailScreenNavigationProp> = ({ route, navigation }) => {
 	const placeInfo = route.params.placeInfo;
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		navigation.setOptions({ headerTitle: placeInfo.name });
 	}, []);
 

@@ -1,7 +1,7 @@
 import * as SplashScreen from 'expo-splash-screen';
 import firebase from 'firebase';
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { fb } from '../api/firebase/Firebase';
+import { fb } from '../api/firebase/login';
 
 type FirebaseUser = firebase.User | null;
 

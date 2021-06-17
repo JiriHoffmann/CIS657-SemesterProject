@@ -16,7 +16,6 @@ BrewServer.interceptors.request.use(
 
 export const fetchBeerLocations = async (lat: any, lon: any) => {
 	return await BrewServer.get(`?lat=${lat}&lng=${lon}&radius=7.5`).then((res) => {
-		// console.log(res);
 		if (res.data.count === 0) return [];
 		const locations = res.data.locations;
 		return locations.map((loc: any) => ({ ...loc, lat: Number(loc.lat), lon: Number(loc.lng) }));

@@ -1,5 +1,5 @@
 import * as Location from 'expo-location';
-import React, { FunctionComponent, useContext, useEffect, useLayoutEffect, useState } from 'react';
+import React, { FunctionComponent, useContext, useEffect, useState } from 'react';
 import { StyleProp, StyleSheet, Text, TouchableOpacity, ViewStyle } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -42,7 +42,7 @@ const LocationSearchButton: FunctionComponent<ButtonProps> = ({
 		}
 	}, [searching]);
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		if (searchOnMount) {
 			searchLocation();
 		}

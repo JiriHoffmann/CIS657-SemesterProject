@@ -34,7 +34,6 @@ const MapScreen: FunctionComponent<MapScreenNavigationProp> = ({ route, navigati
 
 	const getNewBeerLocations = async (lat: any, long: any) => {
 		const newLocations = await fetchBeerLocations(lat, long);
-		console.log(newLocations);
 		setBeerLocations(newLocations);
 	};
 
@@ -106,20 +105,7 @@ const MapScreen: FunctionComponent<MapScreenNavigationProp> = ({ route, navigati
 				style={{ ...styles.zoomInIndicator, backgroundColor: theme.elevation3 }}
 			/>
 			<LocationSearchButton
-				style={{
-					backgroundColor: theme.elevation2,
-					position: 'absolute',
-					bottom: 20,
-					right: 10,
-					shadowColor: '#000',
-					shadowOffset: {
-						width: 0,
-						height: 2
-					},
-					shadowOpacity: 0.25,
-					shadowRadius: 3.84,
-					elevation: 5
-				}}
+				style={{ ...styles.locationSearchButton, backgroundColor: theme.elevation2 }}
 				locationCallback={setUserLocation}
 			/>
 		</View>
@@ -152,6 +138,19 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 15,
 		paddingVertical: 5,
 		borderRadius: 20
+	},
+	locationSearchButton: {
+		position: 'absolute',
+		bottom: 20,
+		right: 10,
+		shadowColor: '#000',
+		shadowOffset: {
+			width: 0,
+			height: 2
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 3.84,
+		elevation: 5
 	}
 });
 
