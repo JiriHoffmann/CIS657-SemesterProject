@@ -8,16 +8,18 @@ export type RootStackParamList = {
 	Login: undefined;
 	BottomTabs: undefined;
 	PlaceDetail: { placeInfo: BeerLocation };
+	ChatDetail: undefined;
 };
 
 export type LoginScreenNavigationProp = StackScreenProps<RootStackParamList, 'Login'>;
 export type PlaceDetailScreenNavigationProp = StackScreenProps<RootStackParamList, 'PlaceDetail'>;
+export type ChatDetailScreenNavigationProp = StackScreenProps<RootStackParamList, 'ChatDetail'>;
 
 // BottomTabRouter
 export type BottomTabParamList = {
 	Map: undefined;
 	Favourites: undefined;
-	Messages: undefined;
+	Chat: undefined;
 	Settings: undefined;
 };
 
@@ -39,5 +41,13 @@ export type FavouritesScreenNavigationProp = {
 	>;
 };
 
-export type MessagesScreenNavigationProp = BottomTabScreenProps<BottomTabParamList, 'Messages'>;
+// Chat
+export type ChatScreenNavigationProp = {
+	route: RouteProp<BottomTabParamList, 'Chat'>;
+	navigation: CompositeNavigationProp<
+		StackNavigationProp<RootStackParamList, 'BottomTabs'>,
+		BottomTabNavigationProp<BottomTabParamList, 'Chat'>
+	>;
+};
+
 export type SettingsScreenNavigationProp = BottomTabScreenProps<BottomTabParamList, 'Settings'>;

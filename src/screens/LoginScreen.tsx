@@ -2,8 +2,8 @@ import React, { FunctionComponent, useContext } from 'react';
 import { useState } from 'react';
 import { TextInput, TouchableOpacity } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native';
-import { register, signIn } from '../api/firebase/Firebase';
-import { LoadingIndicator } from '../components';
+import { register, signIn } from '../api/firebase/login';
+import { LoadingIndicator } from '../components/LoadingIndicator';
 import AppContext from '../contexts/AppContext';
 import { LoginScreenNavigationProp } from '../types';
 
@@ -28,7 +28,6 @@ const LoginScreen: FunctionComponent<LoginScreenNavigationProp> = ({ route, navi
 
 	return (
 		<View style={{ ...styles.container, backgroundColor: theme.background }}>
-			<Text style={{ fontSize: 20, fontWeight: 'bold', color: 'orange', marginBottom: 50 }}>Beer Me!</Text>
 			<TextInput
 				placeholder='email'
 				style={{
@@ -77,7 +76,7 @@ const styles = StyleSheet.create({
 	container: {
 		height: '100%',
 		alignItems: 'center',
-		justifyContent: 'center'
+		paddingTop: 50
 	},
 	textInput: {
 		width: '86%',

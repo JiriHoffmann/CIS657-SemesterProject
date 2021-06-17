@@ -3,7 +3,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import AppContext from '../contexts/AppContext';
 import { FavouritesScreen, MapScreen, SettingsScreen } from '../screens';
-import { MessagesScreen } from '../screens/MessagesScreen';
+import { ChatScreen } from '../screens/ChatScreen';
 import { BottomTabParamList } from '../types';
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
@@ -22,7 +22,7 @@ const BottomTabRouter: FunctionComponent = () => {
 						iconName = focused ? 'favorite' : 'favorite-outline';
 					} else if (route.name === 'Settings') {
 						iconName = 'settings';
-					} else if (route.name === 'Messages') {
+					} else if (route.name === 'Chat') {
 						iconName = 'message';
 					}
 
@@ -39,7 +39,7 @@ const BottomTabRouter: FunctionComponent = () => {
 		>
 			<Tab.Screen name='Map' component={MapScreen} />
 			<Tab.Screen name='Favourites' component={FavouritesScreen} />
-			<Tab.Screen name='Messages' component={MessagesScreen} />
+			<Tab.Screen name='Chat' component={ChatScreen} />
 			<Tab.Screen name='Settings' component={SettingsScreen} />
 		</Tab.Navigator>
 	);
