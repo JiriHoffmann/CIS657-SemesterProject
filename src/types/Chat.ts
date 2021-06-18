@@ -1,18 +1,17 @@
 export interface ChatPreview {
 	id: string;
 	content: string;
-	read: boolean;
-	notified: boolean;
 	senderID: string;
 	senderName: string;
 	timestamp: number;
-	recievers: string[];
+	name: string;
 }
 
 export interface ChatDetail {
 	id: string;
 	createdAt: string;
-	membersID: string[];
+	members: ChatMember[];
+	name: string;
 }
 
 export interface Message {
@@ -22,7 +21,7 @@ export interface Message {
 	timestamp: number;
 }
 
-export interface AddNewUser {
+export interface ChatMember {
 	id: string;
 	email: string;
 }

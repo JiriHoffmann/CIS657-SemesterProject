@@ -1,12 +1,12 @@
-import React, { FunctionComponent, useLayoutEffect, useRef, useState } from 'react';
+import React, { FunctionComponent, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useContext } from 'react';
 import { ActivityIndicator, Alert, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { findUserByEmail } from '../api/firebase/chat';
-import { ChatPreviewTab } from '../components/ChatPreview';
+import { findUserByEmail, subscribeToChatsForUser } from '../api/firebase/chat';
+import { ChatPreviewTab } from '../components/ChatPreviewTab';
 import AppContext from '../contexts/AppContext';
 import { useKeyboardListener } from '../scripts/useKeyboard';
 import { ChatScreenNavigationProp } from '../types';
-import { AddNewUser, ChatPreview } from '../types/Chat';
+import { ChatMember, ChatPreview } from '../types/Chat';
 
 const emailRegex = new RegExp(
 	"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
@@ -21,22 +21,35 @@ const ChatScreen: FunctionComponent<ChatScreenNavigationProp> = ({ navigation })
 	const [chats, setChats] = useState<ChatPreview[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [showAddNewChatModal, setShowAddNewChatModal] = useState(false);
+	const [addNameInput, setAddNameInput] = useState('');
 	const [addNewUserInput, setAddNewUserInput] = useState('');
 	const [addUserLoading, setAddUserLoading] = useState(false);
-	const [addNewChatUsers, setAddNewChatUsers] = useState<AddNewUser[]>([]);
+	const [addNewChatUsers, setAddNewChatUsers] = useState<ChatMember[]>([]);
+
+	useEffect(() => {
+		const unsubscribe = subscribeToChatsForUser(user?.uid ?? null, (data) => {
+			if (loading) setLoading(false);
+			setChats(data);
+		});
+
+		return unsubscribe;
+	}, [user?.uid]);
 
 	const handleOpenChatPress = (chatPreview: ChatPreview) => {
-		// TODO:
+		navigation.navigate('ChatDetail', { chatName: chatPreview.name, chatID: chatPreview.id });
 	};
 
 	const handleAddNewUserPress = async () => {
+		const input = addNewUserInput.toLowerCase().trim();
 		setAddUserLoading(true);
-		if (addNewUserInput.toLowerCase() === user?.email?.toLowerCase()) {
+		if (input === user?.email?.toLowerCase()) {
 			Alert.alert('Ooops', `You can't chat with yourself.`);
-		} else if (!emailRegex.test(addNewUserInput)) {
+		} else if (!emailRegex.test(input)) {
 			Alert.alert('Ooops', `Not a valid email.`);
+		} else if (addNewChatUsers.some((u) => u.email.toLowerCase() === input)) {
+			Alert.alert('Ooops', `User already added.`);
 		} else {
-			await findUserByEmail(addNewUserInput)
+			await findUserByEmail(input)
 				.then((user) => {
 					setAddNewChatUsers([...addNewChatUsers, user]);
 					setAddNewUserInput('');
@@ -49,13 +62,21 @@ const ChatScreen: FunctionComponent<ChatScreenNavigationProp> = ({ navigation })
 	};
 
 	const handleAddNewChatDone = () => {
-		// TODO:
+		navigation.navigate('ChatDetail', { newChatUsers: addNewChatUsers, chatName: addNameInput });
+		setTimeout(() => {
+			clearInputs();
+		}, 500);
 	};
 
 	const handleAddNewChatCancel = () => {
+		clearInputs();
+	};
+
+	const clearInputs = () => {
 		setShowAddNewChatModal(false);
 		setAddNewChatUsers([]);
 		setAddNewUserInput('');
+		setAddNameInput('');
 	};
 
 	useLayoutEffect(() => {
@@ -64,10 +85,10 @@ const ChatScreen: FunctionComponent<ChatScreenNavigationProp> = ({ navigation })
 
 	return (
 		<View style={styles.container}>
-			{loading && <ActivityIndicator size={'large'} color={theme.beerColor} />}
+			{loading && <ActivityIndicator size={'large'} color={theme.beerColor} style={{ marginTop: 20 }} />}
 			<FlatList
 				showsVerticalScrollIndicator={false}
-				style={styles.container}
+				style={styles.chatPreviewTabContainer}
 				data={chats}
 				keyExtractor={(item, index) => item.id ?? `${index}`}
 				renderItem={({ item }) => {
@@ -77,7 +98,7 @@ const ChatScreen: FunctionComponent<ChatScreenNavigationProp> = ({ navigation })
 
 			{!loading && chats.length === 0 && (
 				<Text style={styles.noMessageText}>
-					'Looks like you have no messages. You can send a new one by pressing the + button',
+					Looks like you have no messages. You can send a new one by pressing the + button
 				</Text>
 			)}
 
@@ -93,10 +114,24 @@ const ChatScreen: FunctionComponent<ChatScreenNavigationProp> = ({ navigation })
 
 			{showAddNewChatModal && (
 				<View style={styles.addNewChatModal}>
-					<Text style={styles.addNewUserText}>Add new user</Text>
+					<Text style={styles.addNewUserText}>Chat name:</Text>
 					<View style={styles.addNewUserInputContainer}>
 						<TextInput
+							autoCompleteType='off'
 							ref={addNewChatInputRef}
+							placeholder='Name'
+							style={{
+								...styles.textInput,
+								backgroundColor: theme.elevation1
+							}}
+							onChangeText={setAddNameInput}
+							value={addNameInput}
+						/>
+					</View>
+					<Text style={styles.addNewUserText}>Add new user:</Text>
+					<View style={styles.addNewUserInputContainer}>
+						<TextInput
+							autoCompleteType='off'
 							placeholder='User email'
 							editable={!addUserLoading}
 							style={{
@@ -131,7 +166,11 @@ const ChatScreen: FunctionComponent<ChatScreenNavigationProp> = ({ navigation })
 					/>
 					<View style={{ ...styles.bottomButtons, bottom: keyboardShown ? keyboardHeight : 10 }}>
 						<TouchableOpacity
-							style={{ ...styles.bottomButtonsButton, backgroundColor: theme.beerColor }}
+							disabled={addNewChatUsers.length === 0 || addNameInput === ''}
+							style={{
+								...styles.bottomButtonsButton,
+								backgroundColor: addNewChatUsers.length !== 0 ? theme.beerColor : 'darkgray'
+							}}
 							onPress={handleAddNewChatDone}
 						>
 							<Text style={styles.addNewUserAddButtonText}>Done</Text>
@@ -153,6 +192,10 @@ const ChatScreen: FunctionComponent<ChatScreenNavigationProp> = ({ navigation })
 const styles = StyleSheet.create({
 	container: {
 		flex: 1
+	},
+	chatPreviewTabContainer: {
+		flex: 1,
+		paddingHorizontal: '4%'
 	},
 	noMessageText: {
 		position: 'absolute',

@@ -2,13 +2,14 @@ import { BottomTabNavigationProp, BottomTabScreenProps } from '@react-navigation
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
 import { BeerLocation } from './BeerMapping';
+import { ChatMember } from './Chat';
 
 // Main Router
 export type RootStackParamList = {
 	Login: undefined;
 	BottomTabs: undefined;
 	PlaceDetail: { placeInfo: BeerLocation };
-	ChatDetail: undefined;
+	ChatDetail: { newChatUsers?: ChatMember[]; chatName?: string; chatID?: string };
 };
 
 export type LoginScreenNavigationProp = StackScreenProps<RootStackParamList, 'Login'>;
