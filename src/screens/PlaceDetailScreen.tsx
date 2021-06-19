@@ -11,6 +11,7 @@ const PlaceDetailScreen: FunctionComponent<PlaceDetailScreenNavigationProp> = ({
 
 	return (
 		<View style={styles.container}>
+			<Text>github</Text>
 			<Text>{JSON.stringify(placeInfo)}</Text>
 		</View>
 	);
