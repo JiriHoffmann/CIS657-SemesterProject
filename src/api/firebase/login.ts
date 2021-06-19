@@ -4,6 +4,7 @@ import 'firebase/firestore';
 import * as Notifications from 'expo-notifications';
 import firebase from 'firebase';
 import { Alert, LogBox } from 'react-native';
+import { registerForPushNotificationsAsync } from '../../scripts/registerForPushNotifications';
 import { firebaseConfig } from './FirebaseCredentials';
 
 LogBox.ignoreLogs(['Setting a timer']);
@@ -16,13 +17,21 @@ export async function register(email: any, password: any) {
 		.createUserWithEmailAndPassword(email, password)
 		.then(async (r) => {
 			const currentUser: any = r.user;
-			const token = (await Notifications.getDevicePushTokenAsync()).data;
+			const token = await registerForPushNotificationsAsync().catch(() => {});
 
 			const db = fb.firestore();
-			db.collection('users').doc(currentUser.uid).set({
-				email: currentUser.email,
-				FCM: token
-			});
+			db.collection('users')
+				.doc(currentUser.uid)
+				.set(
+					token
+						? {
+								email: currentUser.email,
+								expoToken: token
+						  }
+						: {
+								email: currentUser.email
+						  }
+				);
 		})
 		.catch((e) => {
 			Alert.alert('Ooops', e.message);
@@ -35,11 +44,13 @@ export async function signIn(email: any, password: any) {
 		.signInWithEmailAndPassword(email, password)
 		.then(async (r) => {
 			const currentUser: any = r.user;
-			const token = (await Notifications.getDevicePushTokenAsync()).data;
-			const db = fb.firestore();
-			db.collection('users').doc(currentUser.uid).update({
-				FCM: token
-			});
+			const token = await registerForPushNotificationsAsync().catch(() => {});
+			if (token) {
+				const db = fb.firestore();
+				db.collection('users').doc(currentUser.uid).update({
+					expoToken: token
+				});
+			}
 		})
 		.catch((e) => {
 			Alert.alert('Ooops', e.message);

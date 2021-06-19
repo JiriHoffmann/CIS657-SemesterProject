@@ -32,6 +32,8 @@ const ChatDetailScreen: FunctionComponent<ChatDetailScreenNavigationProp> = ({ r
 		navigation.setOptions({ headerTitle: chatName ?? chatDetail?.name ?? '' });
 	}, []);
 
+	console.log(messages[0]);
+
 	// subscribe to chat
 	useEffect(() => {
 		const unsubscribe = subscribeToChat(
