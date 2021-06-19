@@ -24,16 +24,10 @@ export default function App() {
 			}
 		}
 
-		Notifications.addNotificationReceivedListener(handleNotification);
-
 		Notifications.addNotificationResponseReceivedListener(handleNotificationResponse);
 
 		prepare();
 	}, []);
-
-	const handleNotification = (event: Notifications.Notification) => {
-		console.log('HN', event.request);
-	};
 
 	const handleNotificationResponse = (event: Notifications.NotificationResponse) => {
 		console.log(event.notification);
