@@ -8,6 +8,7 @@ import { ChatMember } from './Chat';
 export type RootStackParamList = {
 	Login: undefined;
 	BottomTabs: undefined;
+	Favorites: { placeName?: string };
 	PlaceDetail: { placeInfo: BeerLocation };
 	ChatDetail: { newChatUsers?: ChatMember[]; chatName?: string; chatID?: string };
 };
@@ -19,7 +20,7 @@ export type ChatDetailScreenNavigationProp = StackScreenProps<RootStackParamList
 // BottomTabRouter
 export type BottomTabParamList = {
 	Map: undefined;
-	Favourites: undefined;
+	Favorites: {placeName?: string};
 	Chat: undefined;
 	Settings: undefined;
 };

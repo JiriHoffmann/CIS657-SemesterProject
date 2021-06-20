@@ -64,12 +64,9 @@ const SettingsScreen: FunctionComponent<MapScreenNavigationProp> = ({ route, nav
 	return (
 		<View style={styles.buttonContainer}>
 			<View style={{ ...styles.buttons, backgroundColor: theme.beerColor }}>
-				<TouchableOpacity disabled={logOutLoading} onPress={test} style={styles.touchableButtons}>
-					{logOutLoading ? <LoadingIndicator /> : <Text>test</Text>}
-				</TouchableOpacity>
-				{/* <TouchableOpacity disabled={logOutLoading} onPress={handleLogOutPress} style={styles.touchableButtons}>
+				 <TouchableOpacity disabled={logOutLoading} onPress={handleLogOutPress} style={styles.touchableButtons}>
 					{logOutLoading ? <LoadingIndicator /> : <Text>Log Out</Text>}
-				</TouchableOpacity> */}
+				</TouchableOpacity> 
 			</View>
 		</View>
 	);

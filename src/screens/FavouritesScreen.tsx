@@ -3,9 +3,13 @@ import { Keyboard, Pressable, StyleSheet, Text, View } from 'react-native';
 import { FavouritesScreenNavigationProp } from '../types';
 
 const FavouritesScreen: FunctionComponent<FavouritesScreenNavigationProp> = ({ route, navigation }) => {
+
+	const breweryName = route.params.placeName
+
+
 	return (
 		<View style={styles.container}>
-			<Text>Favourites</Text>
+			<Text>{breweryName}</Text>
 		</View>
 	);
 };
