@@ -1,13 +1,14 @@
 import React, { FunctionComponent, useEffect, useState, useContext } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Button } from 'react-native-elements';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { PlaceDetailScreenNavigationProp } from '../types';
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { Input } from 'react-native-elements/dist/input/Input';
 import AppContext from '../contexts/AppContext';
 import { LoadingIndicator } from '../components/LoadingIndicator';
-import { addOverallRating, addUserRating } from '../api/firebase/detail';
+import { addOverallRating, addUserRating, getUserRating } from '../api/firebase/detail';
+import { setUpListener, writeData } from '../api/firebase/favorites';
+import { TabRouter } from '@react-navigation/native';
 
 const PlaceDetailScreen: FunctionComponent<PlaceDetailScreenNavigationProp> = ({ route, navigation }) => {
 	const { user, theme } = useContext(AppContext);
@@ -18,12 +19,18 @@ const PlaceDetailScreen: FunctionComponent<PlaceDetailScreenNavigationProp> = ({
 	var userrating = 1
 
 	const handleSubmit = async () =>{
-		setSubmit(true);
-		var myRating: number = +rating
-		await addUserRating(user?.uid ?? null, myRating, placeInfo.name)
-		await addOverallRating(user?.uid ?? null, myRating, placeInfo.name)
-		setSubmit(false);
-		navigation.navigate('BottomTabs')
+		var ratingNum: number = +rating
+		if((ratingNum < 1 || ratingNum > 5 || isNaN(ratingNum)) || rating == ''){
+			setSubmit(false);
+		}
+		else{
+			setSubmit(true);
+			var myRating: number = +rating
+			await addUserRating(user?.uid ?? null, myRating, placeInfo.name)
+			await addOverallRating(user?.uid ?? null, myRating, placeInfo.name)
+			setSubmit(false);
+			navigation.navigate('BottomTabs')
+		}
 	};
 
 	function checkRating (rating: string){
@@ -34,11 +41,16 @@ const PlaceDetailScreen: FunctionComponent<PlaceDetailScreenNavigationProp> = ({
 	}
 
 	useEffect(() => {
+		console.log("rendering")
+		getUserRating(user?.uid ?? null, placeInfo.name)
+
 		navigation.setOptions({ headerTitle: placeInfo.name,
 			headerRight: () => (
 				<TouchableOpacity
-					onPress={() =>
-						navigation.navigate('Favorites', {placeName: placeInfo.name})
+					onPress={() =>{						
+						writeData(placeInfo.name)
+						navigation.navigate('Favourites', {placeName: placeInfo.name})
+						}
 					}
 				>
 					<MaterialIcons name="favorite-outline" size={24} color="white" style={{marginRight: 10}} />
@@ -113,8 +125,8 @@ const styles = StyleSheet.create({
 		marginTop: 20
 	},
 	touchableButtons: {
-		width: '100%',
-		height: '100%',
+		width: 300,
+		height: 30,
 		justifyContent: 'center',
 		alignItems: 'center'
 	},

@@ -25,8 +25,6 @@ export const addOverallRating = async (userID: string | null, myRating: number, 
     if (!userID) return () => {};
     var overallRating = 5
 
-    console.log("whis is this " + breweryName)
-
     RATINGS_COLLECTION.doc(breweryName).set({
         rating: overallRating
     })
@@ -37,3 +35,15 @@ export const addOverallRating = async (userID: string | null, myRating: number, 
         console.error("Error writing document: ", error);
     });
 }
+
+export const getUserRating = (userID: string | null, breweryName: string) => {
+	if (!userID) return () => {};
+	return USERS_COLLECTION.doc(userID)
+		.collection(RATINGS)
+        .doc(breweryName)
+		.onSnapshot((snapshot) => {
+                console.log("snapshot??", snapshot)
+				return snapshot
+			});
+		
+};

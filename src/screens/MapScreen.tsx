@@ -87,7 +87,7 @@ const MapScreen: FunctionComponent<MapScreenNavigationProp> = ({ route, navigati
 						key={loc.id}
 						coordinate={{ latitude: loc.lat, longitude: loc.lon }}
 						title={loc.name}
-						description={loc.name}
+						description={loc.id}
 						onPress={() => handleMarkerPress(loc)}
 						onCalloutPress={() => handleCalloutPress(loc)}
 					/>
