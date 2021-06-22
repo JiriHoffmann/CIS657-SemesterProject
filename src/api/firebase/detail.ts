@@ -38,12 +38,18 @@ export const addOverallRating = async (userID: string | null, myRating: number, 
 
 export const getUserRating = (userID: string | null, breweryName: string) => {
 	if (!userID) return () => {};
-	return USERS_COLLECTION.doc(userID)
+	const message = USERS_COLLECTION.doc(userID)
 		.collection(RATINGS)
-        .doc(breweryName)
-		.onSnapshot((snapshot) => {
-                console.log("snapshot??", snapshot)
-				return snapshot
-			});
-		
-};
+        .doc(breweryName).get().then((doc) => {
+            if (doc.exists) {
+                console.log(doc.data())
+                return doc.data()
+            } else {
+                // doc.data() will be undefined in this case
+                console.log("No such document!");
+            }
+        }).catch((error) => {
+            console.log("Error getting document:", error);
+        });    
+        return message
+}

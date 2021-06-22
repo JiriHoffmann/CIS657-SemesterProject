@@ -16,7 +16,7 @@ const PlaceDetailScreen: FunctionComponent<PlaceDetailScreenNavigationProp> = ({
 	const [rating, setRating] = useState('');
 	const placeInfo = route.params.placeInfo;
 	var overallrating = 5
-	var userrating = 1
+	var userrating: any | undefined
 
 	const handleSubmit = async () =>{
 		var ratingNum: number = +rating
@@ -41,8 +41,8 @@ const PlaceDetailScreen: FunctionComponent<PlaceDetailScreenNavigationProp> = ({
 	}
 
 	useEffect(() => {
-		console.log("rendering")
-		getUserRating(user?.uid ?? null, placeInfo.name)
+		userrating = getUserRating(user?.uid ?? null, placeInfo.name)
+		console.log(userrating)
 
 		navigation.setOptions({ headerTitle: placeInfo.name,
 			headerRight: () => (
