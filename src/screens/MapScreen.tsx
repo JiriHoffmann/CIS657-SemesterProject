@@ -8,6 +8,7 @@ import { MapZoomInIndicator } from '../components/MapZoomInIndicator';
 import AppContext from '../contexts/AppContext';
 import { MapScreenNavigationProp } from '../types';
 import { BeerLocation, UserLocation } from '../types/BeerMapping';
+import { getOverallRating } from '../api/firebase/detail';
 
 const INITIAL_REGION = {
 	latitude: 42.460584030103824,
@@ -24,6 +25,7 @@ const MapScreen: FunctionComponent<MapScreenNavigationProp> = ({ route, navigati
 	const [mapRegion, setMapRegion] = useState<Region>(INITIAL_REGION);
 	const [beerLocations, setBeerLocations] = useState<BeerLocation[]>([]);
 	const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
+	const [overallRate, setOverallRating] = useState(0)
 
 	useEffect(() => {
 		if (userLocation) {
@@ -52,6 +54,12 @@ const MapScreen: FunctionComponent<MapScreenNavigationProp> = ({ route, navigati
 	};
 
 	const handleMarkerPress = (location: BeerLocation) => {
+		async function oRating(){
+			const overallrating: any = await getOverallRating(location.name)
+			const myOverallRate: number = Number(overallrating.rating)
+			setOverallRating(myOverallRate)
+		}
+		oRating()
 		animateToLocation(location.lat, location.lon);
 	};
 
@@ -85,9 +93,9 @@ const MapScreen: FunctionComponent<MapScreenNavigationProp> = ({ route, navigati
 				{beerLocations.map((loc) => (
 					<Marker
 						key={loc.id}
-						coordinate={{ latitude: loc.lat, longitude: loc.lon }}
+						coordinate={{latitude: loc.lat, longitude: loc.lon }}
 						title={loc.name}
-						description={loc.id}
+						description={'Rating: ' + overallRate}
 						onPress={() => handleMarkerPress(loc)}
 						onCalloutPress={() => handleCalloutPress(loc)}
 					/>
