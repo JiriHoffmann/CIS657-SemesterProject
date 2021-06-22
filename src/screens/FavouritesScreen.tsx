@@ -7,8 +7,6 @@ import { FavouritesScreenNavigationProp } from '../types';
 import { writeData, setUpListener } from '../api/firebase/favorites';
 
 const FavouritesScreen: FunctionComponent<FavouritesScreenNavigationProp> = ({ route, navigation }) => {
-	const breweryName = route.params.placeName
-	
 	const [brewery, setBrewery] = useState([]);
 
 
@@ -25,7 +23,10 @@ const FavouritesScreen: FunctionComponent<FavouritesScreenNavigationProp> = ({ r
 				data={brewery}
 				renderItem={({item}) => {
 					return(
-						<Text style={{marginBottom:50, marginTop: 20, color: 'black', fontSize: 30, fontWeight: 'bold'}}> {item} </Text>
+						<View>
+						<Text style={{marginBottom:10, marginTop: 20, color: 'black', fontSize: 30, fontWeight: 'bold'}}> {item[0]}</Text>
+						<Text style={{textAlign: "right", marginRight: 10, fontStyle: "italic", color: "grey", fontSize: 12}}> {item[1]}</Text>
+						</View>
 					);
 				}}
 			/>

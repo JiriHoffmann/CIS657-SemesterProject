@@ -54,7 +54,7 @@ const LoginScreen: FunctionComponent<LoginScreenNavigationProp> = ({ route, navi
 						onPress={handleLogInPress}
 						style={styles.touchableButtons}
 					>
-						{logInLoading ? <LoadingIndicator /> : <Text>Login in</Text>}
+						{logInLoading ? <LoadingIndicator /> : <Text style={{color: 'white'}}>Login in</Text>}
 					</TouchableOpacity>
 				</View>
 
@@ -64,7 +64,7 @@ const LoginScreen: FunctionComponent<LoginScreenNavigationProp> = ({ route, navi
 						onPress={handleSignUpPress}
 						style={styles.touchableButtons}
 					>
-						{signUpLoading ? <LoadingIndicator /> : <Text>Sign up</Text>}
+						{signUpLoading ? <LoadingIndicator /> : <Text style={{color: 'white'}}>Sign up</Text>}
 					</TouchableOpacity>
 				</View>
 			</View>

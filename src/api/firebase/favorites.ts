@@ -4,10 +4,13 @@ import { firebaseConfig } from './FirebaseCredentials'
 
 
 export function writeData (item: any) {
-    firebase.database().ref(`favoriteData/`).push(item);
+    var time = new Date().toString()
+    var myArray = [item, time]
+    firebase.database().ref(`favoriteData/`).push(myArray);
 }
 
 export function deleteFavorite(item: any){
+    
     firebase.database().ref(`favoriteData/${item.id}`).remove();
 }
 

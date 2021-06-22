@@ -23,33 +23,65 @@ export const addUserRating = async (userID: string | null, userRating: number, b
 
 export const addOverallRating = async (userID: string | null, myRating: number, breweryName: string) => {
     if (!userID) return () => {};
-    var overallRating = 5
+    var sum = 0
+    var counter = 0
 
-    RATINGS_COLLECTION.doc(breweryName).set({
-        rating: overallRating
-    })
-    .then(() => {
-        console.log("Document successfully written 2!");
-    })
-    .catch((error: any) => {
-        console.error("Error writing document: ", error);
-    });
-}
-
-export const getUserRating = (userID: string | null, breweryName: string) => {
-	if (!userID) return () => {};
-	const message = USERS_COLLECTION.doc(userID)
+    USERS_COLLECTION.get()
+    .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            USERS_COLLECTION.doc(doc.id)
 		.collection(RATINGS)
         .doc(breweryName).get().then((doc) => {
             if (doc.exists) {
-                console.log(doc.data())
+                counter++
+                var data: any = doc.data()
+                sum += data.userRating
+                
+                RATINGS_COLLECTION.doc(breweryName).set({
+                    rating: (sum/counter)
+                })
+                .then(() => {
+                    console.log("Document successfully written 2!");
+                })
+                .catch((error: any) => {
+                    console.error("Error writing document: ", error);
+                });
+            }
+        })
+            // doc.data() is never undefined for query doc snapshots
+            //console.log(doc.id, " => ", doc.data());
+        });
+    })
+    .catch((error) => {
+        console.log("Error getting documents: ", error);
+    });
+}
+
+export const getUserRating = async (userID: string | null, breweryName: string) => {
+	if (!userID) return () => {};
+	return await  USERS_COLLECTION.doc(userID)
+		.collection(RATINGS)
+        .doc(breweryName).get().then((doc) => {
+            if (doc.exists) {
                 return doc.data()
             } else {
                 // doc.data() will be undefined in this case
                 console.log("No such document!");
             }
-        }).catch((error) => {
-            console.log("Error getting document:", error);
-        });    
-        return message
+        }).catch((error: any) => {
+            console.error("Error writing document: ", error);
+        }); 
+}
+
+export const getOverallRating = async (breweryName: string) => {
+	return await  RATINGS_COLLECTION.doc(breweryName).get().then((doc) => {
+            if (doc.exists) {
+                return doc.data()
+            } else {
+                // doc.data() will be undefined in this case
+                console.log("No such document!");
+            }
+        }).catch((error: any) => {
+            console.error("Error writing document: ", error);
+        }); 
 }

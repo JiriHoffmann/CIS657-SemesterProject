@@ -6,16 +6,19 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { Input } from 'react-native-elements/dist/input/Input';
 import AppContext from '../contexts/AppContext';
 import { LoadingIndicator } from '../components/LoadingIndicator';
-import { addOverallRating, addUserRating, getUserRating } from '../api/firebase/detail';
+import { addOverallRating, addUserRating, getOverallRating, getUserRating } from '../api/firebase/detail';
 import { setUpListener, writeData } from '../api/firebase/favorites';
 import { TabRouter } from '@react-navigation/native';
+
 
 const PlaceDetailScreen: FunctionComponent<PlaceDetailScreenNavigationProp> = ({ route, navigation }) => {
 	const { user, theme } = useContext(AppContext);
 	const [submitLoading, setSubmit] = useState(false)
 	const [rating, setRating] = useState('');
+	const [userRating, setUserRating] = useState(0);
+	const [overallRating, setOverallRating] = useState(0);
 	const placeInfo = route.params.placeInfo;
-	var overallrating = 5
+	var overallrating: any | undefined
 	var userrating: any | undefined
 
 	const handleSubmit = async () =>{
@@ -26,8 +29,8 @@ const PlaceDetailScreen: FunctionComponent<PlaceDetailScreenNavigationProp> = ({
 		else{
 			setSubmit(true);
 			var myRating: number = +rating
-			await addUserRating(user?.uid ?? null, myRating, placeInfo.name)
-			await addOverallRating(user?.uid ?? null, myRating, placeInfo.name)
+			await addUserRating(user?.uid!, myRating, placeInfo.name)
+			await addOverallRating(user?.uid!, myRating, placeInfo.name)
 			setSubmit(false);
 			navigation.navigate('BottomTabs')
 		}
@@ -40,9 +43,21 @@ const PlaceDetailScreen: FunctionComponent<PlaceDetailScreenNavigationProp> = ({
 		}
 	}
 
-	useEffect(() => {
-		userrating = getUserRating(user?.uid ?? null, placeInfo.name)
-		console.log(userrating)
+	useEffect (() => {
+		async function uRating(){
+			const userrating: any = await getUserRating(user?.uid!, placeInfo.name)
+			const myRate: number = Number(userrating.userRating)
+			setUserRating(myRate)
+		}
+
+		async function oRating(){
+			const overallrating: any = await getOverallRating(placeInfo.name)
+			const myOverallRate: number = Number(overallrating.rating)
+			setOverallRating(myOverallRate)
+		}
+
+		uRating()
+		oRating()
 
 		navigation.setOptions({ headerTitle: placeInfo.name,
 			headerRight: () => (
@@ -62,9 +77,9 @@ const PlaceDetailScreen: FunctionComponent<PlaceDetailScreenNavigationProp> = ({
 	
 	return (
 		<View style={{ ...styles.container, backgroundColor: theme.background }}>
-			<Text style={styles.text}>{JSON.stringify(placeInfo.name)}</Text>
-			<Text style={styles.text}>Overall Rating: {overallrating}</Text>
-			<Text style={styles.text}>User Rating: {userrating}</Text>
+			<Text style={styles.title}>{JSON.stringify(placeInfo.name)}</Text>
+			<Text style={styles.text}>Overall Rating: {overallRating}</Text>
+			<Text style={styles.text}>User Rating: {userRating}</Text>
 			<Input style={styles.rating} placeholder={'Enter a Rating'}
 			onChangeText={setRating}
 			value={rating}
@@ -99,6 +114,13 @@ const styles = StyleSheet.create({
 		fontSize: 35,
 		fontWeight: 'bold'
 
+	},
+	title: {
+		marginTop: 20,
+		textAlign: 'center',
+		fontSize: 35,
+		fontWeight: 'bold',
+		fontStyle: 'italic'
 	},
 	rating: {
 		marginTop: 25,
