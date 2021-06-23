@@ -1,11 +1,8 @@
-import React, { FunctionComponent, useContext, useEffect, useState } from 'react';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import React, { FunctionComponent, useContext } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import AppContext from '../contexts/AppContext';
 import { ChatPreview } from '../types/Chat';
-
-const SCREEN_WIDTH = Dimensions.get('window').width;
-const ONE_DAY = 24 * 60 * 60;
 
 interface Props {
 	chat: ChatPreview;
