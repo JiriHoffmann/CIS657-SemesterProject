@@ -36,7 +36,6 @@ const ChatScreen: FunctionComponent<ChatScreenNavigationProp> = ({ navigation })
 	}, [user?.uid]);
 
 	const handleOpenChatPress = (chatPreview: ChatPreview) => {
-		console.log(chatPreview);
 		navigation.navigate('ChatDetail', { chatName: chatPreview.name, chatID: chatPreview.id });
 	};
 

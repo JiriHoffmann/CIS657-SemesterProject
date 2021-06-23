@@ -29,13 +29,12 @@ const MapScreen: FunctionComponent<MapScreenNavigationProp> = ({ route, navigati
 
 	useEffect(() => {
 		if (userLocation) {
-			getNewBeerLocations(mapRegion.latitude, mapRegion.longitude);
 			animateToLocation(userLocation.latitude, userLocation.longitude);
 		}
 	}, [userLocation]);
 
 	const getNewBeerLocations = async (lat: any, long: any) => {
-		const newLocations = await fetchBeerLocations(lat, long);
+		const newLocations = await fetchBeerLocations(lat, long).catch(() => {});
 		setBeerLocations(newLocations);
 	};
 
