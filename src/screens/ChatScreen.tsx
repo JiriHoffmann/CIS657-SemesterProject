@@ -86,7 +86,11 @@ const ChatScreen: FunctionComponent<ChatScreenNavigationProp> = ({ navigation })
 
 	return (
 		<View style={styles.container}>
-			{loading && <LoadingIndicator />}
+			{loading && (
+				<View style={{ alignSelf: 'center' }}>
+					<LoadingIndicator />
+				</View>
+			)}
 			<FlatList
 				showsVerticalScrollIndicator={false}
 				style={styles.chatPreviewTabContainer}

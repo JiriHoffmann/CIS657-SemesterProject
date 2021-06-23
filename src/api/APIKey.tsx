@@ -1,1 +1,0 @@
-export const BEERMAP_KEY = '5bef6e301d773664c6d807887acc7fb6'

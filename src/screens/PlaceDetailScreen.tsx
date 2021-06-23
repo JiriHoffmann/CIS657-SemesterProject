@@ -1,62 +1,55 @@
 import React, { FunctionComponent, useContext, useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, Linking } from 'react-native';
-import { Card, Rating } from 'react-native-elements';
-import { Input } from 'react-native-elements/dist/input/Input';
+import { Dimensions, Image, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Rating } from 'react-native-elements';
 import { MaterialIcons } from '@expo/vector-icons';
-import { addOverallRating, addUserRating, getOverallRating, getUserRating } from '../api/firebase/detail';
+import { fetchBeerLocationImage } from '../api/beermapping/API';
+import { addUserRating, getOverallRating, getUserRating } from '../api/firebase/detail';
 import { deleteFavourite, saveFavourite } from '../api/firebase/favorites';
 import { LoadingIndicator } from '../components/LoadingIndicator';
 import AppContext from '../contexts/AppContext';
 import { PlaceDetailScreenNavigationProp } from '../types';
 
+const SCREEN_WIDTH = Dimensions.get('screen').width;
 const PlaceDetailScreen: FunctionComponent<PlaceDetailScreenNavigationProp> = ({ route, navigation }) => {
 	const placeInfo = route.params.placeInfo;
 	const isFavouritedParam = route.params.isFavourited;
 	const showMap = route.params.showMap;
 
 	const { user, theme } = useContext(AppContext);
-	const [submitLoading, setSubmit] = useState(false);
-	const [rating, setRating] = useState('');
-	const [userRating, setUserRating] = useState(0);
+	const [submittingRating, setSubmittingRating] = useState(false);
+	const [rating, setRating] = useState(3);
 	const [overallRating, setOverallRating] = useState(0);
 	const [favouriteLoading, setFavouriteLoading] = useState(false);
 	const [isFavourite, setIsFavourite] = useState(isFavouritedParam ?? false);
+	const [fetchingImage, setFetchingImage] = useState(true);
+	const [imageUrl, setImageUrl] = useState<string | null>(null);
 
 	const handleSubmit = async () => {
-		var ratingNum: number = +rating;
-		if (ratingNum < 1 || ratingNum > 5 || isNaN(ratingNum) || rating == '') {
-			setSubmit(false);
-		} else {
-			setSubmit(true);
-			var myRating: number = +rating;
-			await addUserRating(user?.uid!, myRating, placeInfo.name);
-			await addOverallRating(user?.uid!, myRating, placeInfo.name);
-			setSubmit(false);
-		}
+		setSubmittingRating(true);
+		await addUserRating(user?.uid!, rating, placeInfo.id);
+		await getOverallRating(placeInfo.id)
+			.then((res) => res && setOverallRating(res))
+			.catch(() => {});
+		setSubmittingRating(false);
 	};
 
-	function checkRating(rating: string) {
-		var ratingNum: number = +rating;
-		if ((ratingNum < 1 || ratingNum > 5 || isNaN(ratingNum)) && rating != '') {
-			return 'Oops, enter a number 1-5 (e.g. 1.2 or 3)';
-		}
-	}
-
 	useEffect(() => {
-		async function uRating() {
-			const userrating: any = await getUserRating(user?.uid!, placeInfo.name);
-			const myRate: number = Number(userrating.userRating);
-			setUserRating(myRate);
-		}
+		getUserRating(user?.uid!, placeInfo.name)
+			.then((res) => res && setRating(res))
+			.catch(() => {});
+		getOverallRating(placeInfo.id)
+			.then((res) => res && setOverallRating(res))
+			.catch(() => {});
 
-		async function oRating() {
-			const overallrating: any = await getOverallRating(placeInfo.name);
-			const myOverallRate: number = Number(overallrating.rating);
-			setOverallRating(myOverallRate);
-		}
+		fetchBeerLocationImage(placeInfo.id)
+			.then((res) => {
+				setImageUrl(res);
+			})
+			.catch(() => {})
+			.finally(() => {
+				setFetchingImage(false);
+			});
 
-		uRating();
-		oRating();
 		navigation.setOptions({
 			headerTitle: placeInfo.name
 		});
@@ -98,10 +91,18 @@ const PlaceDetailScreen: FunctionComponent<PlaceDetailScreenNavigationProp> = ({
 	}, [favouriteLoading, isFavourite]);
 
 	return (
-		<View style={{ ...styles.container, backgroundColor: theme.background }}>
-			<Card containerStyle={{ backgroundColor: theme.background }}>
+		<View style={{ ...styles.container }}>
+			<ScrollView
+				showsVerticalScrollIndicator={false}
+				style={{ width: '100%', height: '100%' }}
+				contentContainerStyle={{ alignItems: 'center' }}
+			>
+				<View style={styles.imageContainer}>
+					{fetchingImage && <LoadingIndicator />}
+					{!fetchingImage && imageUrl !== null && <Image style={styles.image} source={{ uri: imageUrl }} />}
+					{!fetchingImage && imageUrl === null && <Text>No Image found :/</Text>}
+				</View>
 				<Text style={styles.title}>{placeInfo.name}</Text>
-			<Card.Divider/>
 				<Text style={styles.text3}>
 					Address: {placeInfo.street}, {placeInfo.city}
 				</Text>
@@ -110,20 +111,22 @@ const PlaceDetailScreen: FunctionComponent<PlaceDetailScreenNavigationProp> = ({
 				<Text style={styles.text4} onPress={() => Linking.openURL('http://google.com')}>
 					Website: <Text style={{ color: 'blue' }}>{placeInfo.url}</Text>
 				</Text>
-				<Card.Divider />
-				<Text style={styles.text}>Overall Rating: {overallRating}</Text>
-				<Text style={styles.text2}>User Rating: {userRating}</Text>
-			<Card.Divider/>
-			</Card>
-			<Card.Divider />
-			<Rating showRating onFinishRating={setRating}></Rating>
-			<View style={styles.buttonContainer}>
-				<View style={{ ...styles.buttons, backgroundColor: theme.beerColor }}>
-					<TouchableOpacity disabled={submitLoading} onPress={handleSubmit} style={styles.touchableButtons}>
-						{submitLoading ? <LoadingIndicator /> : <Text style={{ color: 'white' }}>Submit</Text>}
-					</TouchableOpacity>
+
+				<Text style={styles.text}>Our Rating: {overallRating}</Text>
+
+				<Rating showRating value={rating} onFinishRating={setRating}></Rating>
+				<View style={styles.buttonContainer}>
+					<View style={{ ...styles.buttons, backgroundColor: theme.beerColor }}>
+						<TouchableOpacity
+							disabled={submittingRating}
+							onPress={handleSubmit}
+							style={styles.touchableButtons}
+						>
+							{submittingRating ? <LoadingIndicator /> : <Text style={{ color: 'white' }}>Submit</Text>}
+						</TouchableOpacity>
+					</View>
 				</View>
-			</View>
+			</ScrollView>
 		</View>
 	);
 };
@@ -131,9 +134,18 @@ const PlaceDetailScreen: FunctionComponent<PlaceDetailScreenNavigationProp> = ({
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: '#fff',
-		alignItems: 'center',
-		justifyContent: 'flex-start'
+		backgroundColor: '#fff'
+	},
+
+	imageContainer: {
+		width: SCREEN_WIDTH,
+		height: SCREEN_WIDTH,
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	image: {
+		width: SCREEN_WIDTH,
+		height: SCREEN_WIDTH
 	},
 	text: {
 		marginTop: 10,
@@ -176,7 +188,8 @@ const styles = StyleSheet.create({
 	buttons: {
 		flex: 1,
 		marginHorizontal: 10,
-		height: 40,
+		marginBottom: 50,
+		height: 50,
 		borderRadius: 20,
 		justifyContent: 'center',
 		alignItems: 'center',

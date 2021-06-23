@@ -33,6 +33,7 @@ const FavouritesScreen: FunctionComponent<FavouritesScreenNavigationProp> = ({ n
 			{loading && <LoadingIndicator />}
 
 			<FlatList
+				style={{ width: '100%', height: '100%' }}
 				keyExtractor={(item) => item.id}
 				data={brewery}
 				renderItem={({ item }) => {

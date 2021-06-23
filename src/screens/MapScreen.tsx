@@ -25,7 +25,6 @@ const MapScreen: FunctionComponent<MapScreenNavigationProp> = ({ route, navigati
 	const [mapRegion, setMapRegion] = useState<Region>(INITIAL_REGION);
 	const [beerLocations, setBeerLocations] = useState<BeerLocation[]>([]);
 	const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
-	const [overallRate, setOverallRating] = useState(0);
 
 	useEffect(() => {
 		if (userLocation) {
@@ -53,10 +52,6 @@ const MapScreen: FunctionComponent<MapScreenNavigationProp> = ({ route, navigati
 	};
 
 	const handleMarkerPress = async (location: BeerLocation) => {
-		const overallrating: any = await getOverallRating(location.name);
-		const myOverallRate: number = Number(overallrating.rating);
-		setOverallRating(myOverallRate);
-
 		animateToLocation(location.lat, location.lon);
 	};
 
@@ -92,7 +87,7 @@ const MapScreen: FunctionComponent<MapScreenNavigationProp> = ({ route, navigati
 						key={loc.id}
 						coordinate={{ latitude: loc.lat, longitude: loc.lon }}
 						title={loc.name}
-						description={'Rating: ' + overallRate}
+						description={'Press for more info'}
 						onPress={() => handleMarkerPress(loc)}
 						onCalloutPress={() => handleCalloutPress(loc)}
 					/>

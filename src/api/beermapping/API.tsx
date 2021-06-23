@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+export const BEERMAP_KEY = '5bef6e301d773664c6d807887acc7fb6';
 const BrewServer = axios.create({
 	baseURL: 'https://beermapping.com/includes/dataradius.php'
 });
@@ -23,7 +24,9 @@ export const fetchBeerLocations = async (lat: any, lon: any) => {
 };
 
 export const fetchBeerLocationImage = async (locID: string) => {
-	return;
+	return axios
+		.get(`http://beermapping.com/webservice/locimage/${BEERMAP_KEY}/${locID}&s=json`)
+		.then((res) => res.data[0]?.imageurl ?? null);
 };
 
 export default BrewServer;
