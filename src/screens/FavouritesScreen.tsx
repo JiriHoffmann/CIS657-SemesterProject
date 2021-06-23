@@ -33,7 +33,7 @@ const FavouritesScreen: FunctionComponent<FavouritesScreenNavigationProp> = ({ n
 			{loading && <LoadingIndicator />}
 
 			<FlatList
-				style={{ width: '100%', height: '100%' }}
+				style={{ width: '100%', height: '100%', paddingHorizontal: '5%' }}
 				keyExtractor={(item) => item.id}
 				data={brewery}
 				renderItem={({ item }) => {
@@ -42,7 +42,6 @@ const FavouritesScreen: FunctionComponent<FavouritesScreenNavigationProp> = ({ n
 							<Divider>
 								<Text
 									style={{
-										marginBottom: 10,
 										marginTop: 20,
 										color: 'black',
 										fontSize: 30,
@@ -58,7 +57,7 @@ const FavouritesScreen: FunctionComponent<FavouritesScreenNavigationProp> = ({ n
 										fontStyle: 'italic',
 										color: 'blue',
 										fontSize: 14,
-										marginBottom: 15
+										marginBottom: 5
 									}}
 								>
 									{item.phone}

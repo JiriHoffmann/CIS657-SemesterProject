@@ -108,9 +108,11 @@ const PlaceDetailScreen: FunctionComponent<PlaceDetailScreenNavigationProp> = ({
 				</Text>
 				<Text style={styles.text3}>Phone Number: {placeInfo.phone}</Text>
 				<Text style={styles.text3}>Google Ratings: {placeInfo.gtotal}</Text>
-				<Text style={styles.text4} onPress={() => Linking.openURL('http://google.com')}>
-					Website: <Text style={{ color: 'blue' }}>{placeInfo.url}</Text>
-				</Text>
+				{placeInfo.url !== 'http://' && (
+					<Text style={styles.text4} onPress={() => Linking.openURL('http://google.com')}>
+						Website: <Text style={{ color: 'blue' }}>{placeInfo.url}</Text>
+					</Text>
+				)}
 
 				<Text style={styles.text}>Our Rating: {overallRating}</Text>
 
