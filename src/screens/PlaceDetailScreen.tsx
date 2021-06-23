@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useContext, useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Card } from 'react-native-elements';
+import { Card, Rating } from 'react-native-elements';
 import { Input } from 'react-native-elements/dist/input/Input';
 import { MaterialIcons } from '@expo/vector-icons';
 import { addOverallRating, addUserRating, getOverallRating, getUserRating } from '../api/firebase/detail';
@@ -101,22 +101,20 @@ const PlaceDetailScreen: FunctionComponent<PlaceDetailScreenNavigationProp> = ({
 		<View style={{ ...styles.container, backgroundColor: theme.background }}>
 			<Card containerStyle={{ backgroundColor: '#FFF7D5' }}>
 				<Text style={styles.title}>{placeInfo.name}</Text>
-				<Card.Divider />
+			<Card.Divider/>
+				<Text style={styles.text3}>Address: {placeInfo.street}, {placeInfo.city}</Text>
+				<Text style={styles.text3}>Phone Number: {placeInfo.phone}</Text>
+				<Text style={styles.text3}>Google Ratings: {placeInfo.gtotal}</Text>
+				<Text style={styles.text4}>Website: {placeInfo.url}</Text>
+			<Card.Divider/>
 				<Text style={styles.text}>Overall Rating: {overallRating}</Text>
 				<Text style={styles.text2}>User Rating: {userRating}</Text>
-				<Card.Divider />
-				<Input
-					inputContainerStyle={{ borderBottomWidth: 0, width: 350 }}
-					style={{
-						...styles.textInput,
-						backgroundColor: theme.elevation1
-					}}
-					placeholder={'Enter a Rating'}
-					onChangeText={setRating}
-					value={rating}
-					errorStyle={{ color: 'red' }}
-					errorMessage={checkRating(rating)}
-				></Input>
+			<Card.Divider/>
+				<Rating
+				showRating
+ 	 			onFinishRating={setRating}
+				>
+				</Rating>
 			</Card>
 			<View style={styles.buttonContainer}>
 				<View style={{ ...styles.buttons, backgroundColor: theme.beerColor }}>
