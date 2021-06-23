@@ -49,21 +49,25 @@ const LocationSearchButton: FunctionComponent<ButtonProps> = ({
 	}, []);
 
 	const searchLocation = async () => {
-		let { status } = await Location.requestForegroundPermissionsAsync();
-		if (status !== 'granted') {
-			setHasPermission(false);
-			return;
+		try {
+			let { status } = await Location.requestForegroundPermissionsAsync();
+			if (status !== 'granted') {
+				setHasPermission(false);
+				return;
+			}
+			setHasPermission(true);
+			setSearching(true);
+			Location.getCurrentPositionAsync({})
+				.then((location) => {
+					if (location.coords) {
+						setLocation(location.coords);
+						locationCallback(location.coords);
+					}
+				})
+				.finally(() => setSearching(false));
+		} catch {
+			// do nothing on error - canceled by user
 		}
-		setHasPermission(true);
-		setSearching(true);
-		Location.getCurrentPositionAsync({})
-			.then((location) => {
-				if (location.coords) {
-					setLocation(location.coords);
-					locationCallback(location.coords);
-				}
-			})
-			.finally(() => setSearching(false));
 	};
 
 	const icon = useAnimatedStyle(() => {
