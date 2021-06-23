@@ -33,8 +33,9 @@ const MapScreen: FunctionComponent<MapScreenNavigationProp> = ({ route, navigati
 	}, [userLocation]);
 
 	const getNewBeerLocations = async (lat: any, long: any) => {
-		const newLocations = await fetchBeerLocations(lat, long).catch(() => {});
-		setBeerLocations(newLocations);
+		await fetchBeerLocations(lat, long).then((res) => {
+			setBeerLocations(res);
+		});
 	};
 
 	const onRegionChange = (region: Region) => {

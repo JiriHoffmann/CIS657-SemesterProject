@@ -109,12 +109,12 @@ const PlaceDetailScreen: FunctionComponent<PlaceDetailScreenNavigationProp> = ({
 				<Text style={styles.text3}>Phone Number: {placeInfo.phone}</Text>
 				<Text style={styles.text3}>Google Ratings: {placeInfo.gtotal}</Text>
 				{placeInfo.url !== 'http://' && (
-					<Text style={styles.text4} onPress={() => Linking.openURL('http://google.com')}>
+					<Text style={styles.text4} onPress={() => Linking.openURL(placeInfo.url)}>
 						Website: <Text style={{ color: 'blue' }}>{placeInfo.url}</Text>
 					</Text>
 				)}
 
-				<Text style={styles.text}>Our Rating: {overallRating}</Text>
+				<Text style={styles.text}>Our Rating: {Math.round(overallRating * 10) / 10}</Text>
 
 				<Rating showRating value={rating} onFinishRating={setRating}></Rating>
 				<View style={styles.buttonContainer}>
