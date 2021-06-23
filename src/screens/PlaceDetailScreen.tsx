@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useContext, useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Button } from 'react-native-elements';
+import { Button, Rating } from 'react-native-elements';
 import { Input } from 'react-native-elements/dist/input/Input';
 import { MaterialIcons } from '@expo/vector-icons';
 import { addOverallRating, addUserRating, getOverallRating, getUserRating } from '../api/firebase/detail';
@@ -103,29 +103,27 @@ const PlaceDetailScreen: FunctionComponent<PlaceDetailScreenNavigationProp> = ({
 			<Card  containerStyle={{backgroundColor: '#FFF7D5'}}>
 				<Text style={styles.title}>{JSON.stringify(placeInfo.name)}</Text>
 			<Card.Divider/>
+				<Text style={styles.text3}>Address: {placeInfo.street}, {placeInfo.city}</Text>
+				<Text style={styles.text3}>Phone Number: {placeInfo.phone}</Text>
+				<Text style={styles.text3}>Google Ratings: {placeInfo.gtotal}</Text>
+				<Text style={styles.text4}>Website: {placeInfo.url}</Text>
+			<Card.Divider/>
 				<Text style={styles.text}>Overall Rating: {overallRating}</Text>
 				<Text style={styles.text2}>User Rating: {userRating}</Text>
-			<Card.Divider/>
-				<Input
-					inputContainerStyle={{borderBottomWidth: 0, width: 350}}
-					style={{
-						...styles.textInput,
-						backgroundColor: theme.elevation1
-					}}
-					placeholder={'Enter a Rating'}
-					onChangeText={setRating}
-					value={rating}
-					errorStyle={{ color: 'red' }}
-					errorMessage={checkRating(rating)}
-				></Input>
-			</Card>
-			<View style={styles.buttonContainer}>
-				<View style={{ ...styles.buttons, backgroundColor: theme.beerColor }}>
-					<TouchableOpacity disabled={submitLoading} onPress={handleSubmit} style={styles.touchableButtons}>
-						{submitLoading ? <LoadingIndicator /> : <Text style={{ color: 'white' }}>Submit</Text>}
-					</TouchableOpacity>
+			<Card.Divider/>	
+				<Rating
+				showRating
+				onFinishRating={setRating}
+				>
+				</Rating>
+				<View style={styles.buttonContainer}>
+					<View style={{ ...styles.buttons, backgroundColor: theme.beerColor }}>
+						<TouchableOpacity disabled={submitLoading} onPress={handleSubmit} style={styles.touchableButtons}>
+							{submitLoading ? <LoadingIndicator /> : <Text style={{ color: 'white' }}>Submit</Text>}
+						</TouchableOpacity>
+					</View>
 				</View>
-			</View>
+			</Card>
 		</View>
 	);
 };
@@ -138,27 +136,39 @@ const styles = StyleSheet.create({
 		justifyContent: 'flex-start'
 	},
 	text: {
-		marginTop: 20,
+		marginTop: 10,
 		textAlign: 'center',
-		fontSize: 30,
+		fontSize: 25,
 		fontWeight: 'bold',
 		marginBottom: 20
 	},
 	text2: {
 		marginTop: 20,
 		textAlign: 'center',
-		fontSize: 30,
+		fontSize: 25,
 		fontWeight: 'bold',
-		marginBottom: 40
+		marginBottom: 30
+	},
+	text3: {
+		textAlign: 'center',
+		fontSize: 20,
+		fontWeight: 'bold',
+		marginBottom: 10
+	},
+	text4: {
+		textAlign: 'center',
+		fontSize: 20,
+		fontWeight: 'bold',
+		marginBottom: 20
 	},
 	title: {
-		marginTop: 20,
+		marginTop: 10,
 		textAlign: 'center',
-		fontSize: 36,
+		fontSize: 30,
 		fontWeight: 'bold',
 		fontStyle: 'italic',
 		fontFamily: 'Helvetica',
-		marginBottom: 50
+		marginBottom: 20
 	},
 	rating: {
 		marginTop: 25,
@@ -180,9 +190,11 @@ const styles = StyleSheet.create({
 		shadowRadius: 3.84
 	},
 	buttonContainer: {
-		width: '86%',
+		width: '100%',
 		flexDirection: 'row',
-		marginTop: 30
+		marginTop: 30,
+		alignItems: 'center',
+		justifyContent: 'center'
 	},
 	touchableButtons: {
 		width: 300,
@@ -191,8 +203,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center'
 	},
 	textInput: {
-		marginTop: 40,
-		marginBottom: 40,
+		marginTop: 20,
 		alignContent: 'center',
 		textAlign: 'center',
 		width: '86%',
