@@ -1,7 +1,4 @@
-import 'firebase/database';
-import 'firebase/firestore';
-
-import { Alert, LogBox } from 'react-native';
+import { LogBox } from 'react-native';
 import { ChatDetail, ChatMember, ChatPreview, Message } from '../../types/Chat';
 import { fb } from './login';
 

@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useContext, useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Button } from 'react-native-elements';
+import { Card } from 'react-native-elements';
 import { Input } from 'react-native-elements/dist/input/Input';
 import { MaterialIcons } from '@expo/vector-icons';
 import { addOverallRating, addUserRating, getOverallRating, getUserRating } from '../api/firebase/detail';
@@ -8,7 +8,6 @@ import { deleteFavourite, saveFavourite } from '../api/firebase/favorites';
 import { LoadingIndicator } from '../components/LoadingIndicator';
 import AppContext from '../contexts/AppContext';
 import { PlaceDetailScreenNavigationProp } from '../types';
-import { Card } from 'react-native-elements';
 
 const PlaceDetailScreen: FunctionComponent<PlaceDetailScreenNavigationProp> = ({ route, navigation }) => {
 	const placeInfo = route.params.placeInfo;
@@ -100,14 +99,14 @@ const PlaceDetailScreen: FunctionComponent<PlaceDetailScreenNavigationProp> = ({
 
 	return (
 		<View style={{ ...styles.container, backgroundColor: theme.background }}>
-			<Card  containerStyle={{backgroundColor: '#FFF7D5'}}>
-				<Text style={styles.title}>{JSON.stringify(placeInfo.name)}</Text>
-			<Card.Divider/>
+			<Card containerStyle={{ backgroundColor: '#FFF7D5' }}>
+				<Text style={styles.title}>{placeInfo.name}</Text>
+				<Card.Divider />
 				<Text style={styles.text}>Overall Rating: {overallRating}</Text>
 				<Text style={styles.text2}>User Rating: {userRating}</Text>
-			<Card.Divider/>
+				<Card.Divider />
 				<Input
-					inputContainerStyle={{borderBottomWidth: 0, width: 350}}
+					inputContainerStyle={{ borderBottomWidth: 0, width: 350 }}
 					style={{
 						...styles.textInput,
 						backgroundColor: theme.elevation1
@@ -157,7 +156,6 @@ const styles = StyleSheet.create({
 		fontSize: 36,
 		fontWeight: 'bold',
 		fontStyle: 'italic',
-		fontFamily: 'Helvetica',
 		marginBottom: 50
 	},
 	rating: {
@@ -210,7 +208,7 @@ const styles = StyleSheet.create({
 		shadowRadius: 3.84,
 
 		elevation: 5
-	},
+	}
 });
 
 export { PlaceDetailScreen };

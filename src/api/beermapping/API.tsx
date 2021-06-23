@@ -22,4 +22,8 @@ export const fetchBeerLocations = async (lat: any, lon: any) => {
 	});
 };
 
+export const fetchBeerLocationImage = async (locID: string) => {
+	return;
+};
+
 export default BrewServer;

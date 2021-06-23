@@ -1,27 +1,56 @@
-import React, { FunctionComponent, useContext, useEffect, useState } from 'react';
-import { Button, Keyboard, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { User } from '../../firebase/functions/types/Chat';
-import { fb, logOut } from '../api/firebase/login';
+import React, { FunctionComponent, useContext, useState } from 'react';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { deleteAccount, fb, logOut } from '../api/firebase/login';
 import { LoadingIndicator } from '../components/LoadingIndicator';
+import { ThemePicker } from '../components/ThemePicker';
 import AppContext from '../contexts/AppContext';
 import { MapScreenNavigationProp } from '../types';
-import { ChatDetail } from '../types/Chat';
 
 const SettingsScreen: FunctionComponent<MapScreenNavigationProp> = ({ route, navigation }) => {
 	const { theme } = useContext(AppContext);
 	const [logOutLoading, setLogOutLoading] = useState(false);
+	const [deleteLoading, setDeleteLoading] = useState(false);
 
 	const handleLogOutPress = async () => {
 		setLogOutLoading(true);
-		await logOut();
-		setLogOutLoading(false);
+		await logOut().catch(() => setLogOutLoading(false));
+	};
+
+	const handleDeleteAccountPress = async () => {
+		Alert.alert('Woah!', 'Are you sure you want to delete your account?', [
+			{
+				text: 'Cancel',
+				style: 'cancel'
+			},
+			{
+				text: 'OK',
+				onPress: async () => {
+					deleteAccount().catch(() => {
+						setDeleteLoading(true);
+					});
+				}
+			}
+		]);
 	};
 
 	return (
-		<View style={styles.buttonContainer}>
-			<View style={{ ...styles.buttons, backgroundColor: theme.beerColor }}>
-				<TouchableOpacity disabled={logOutLoading} onPress={handleLogOutPress} style={styles.touchableButtons}>
-					{logOutLoading ? <LoadingIndicator /> : <Text style={{ color: 'white' }}>Log Out</Text>}
+		<View style={styles.container}>
+			<ThemePicker />
+
+			<View style={styles.deleteAndLogOutButtonsContainer}>
+				<TouchableOpacity
+					disabled={deleteLoading}
+					onPress={handleDeleteAccountPress}
+					style={{ ...styles.deleteAndLogOutButtons, backgroundColor: 'red' }}
+				>
+					{logOutLoading ? <LoadingIndicator /> : <Text style={styles.buttonText}>Delete Account</Text>}
+				</TouchableOpacity>
+				<TouchableOpacity
+					disabled={logOutLoading}
+					onPress={handleLogOutPress}
+					style={{ ...styles.deleteAndLogOutButtons, backgroundColor: theme.beerColor }}
+				>
+					{logOutLoading ? <LoadingIndicator /> : <Text style={styles.buttonText}>Log Out</Text>}
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -29,21 +58,18 @@ const SettingsScreen: FunctionComponent<MapScreenNavigationProp> = ({ route, nav
 };
 
 const styles = StyleSheet.create({
-	buttonContainer: {
-		flex: 1,
-		alignItems: 'flex-end',
-		justifyContent: 'center',
-		width: '78%',
-		flexDirection: 'row',
-		marginBottom: 20,
-		marginLeft: 50
+	container: {
+		width: '100%',
+		height: '100%',
+		paddingTop: 30
 	},
-	buttons: {
-		flex: 1,
-		marginHorizontal: 10,
-		height: 40,
+	deleteAndLogOutButtons: {
+		marginHorizontal: '7%',
+		marginVertical: 5,
+		height: 50,
+		width: '84%',
 		borderRadius: 20,
-		justifyContent: 'flex-end',
+		justifyContent: 'center',
 		alignItems: 'center',
 		shadowColor: '#000',
 		shadowOffset: {
@@ -52,15 +78,14 @@ const styles = StyleSheet.create({
 		},
 		shadowOpacity: 0.25,
 		shadowRadius: 3.84,
-
 		elevation: 5
 	},
-	touchableButtons: {
-		width: '100%',
-		height: '100%',
-		justifyContent: 'center',
-		alignItems: 'center'
-	}
+	deleteAndLogOutButtonsContainer: {
+		position: 'absolute',
+		bottom: 20,
+		width: '100%'
+	},
+	buttonText: { color: 'white', fontWeight: 'bold', fontSize: 17 }
 });
 
 export { SettingsScreen };

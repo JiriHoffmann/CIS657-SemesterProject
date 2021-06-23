@@ -58,8 +58,14 @@ export async function signIn(email: any, password: any) {
 }
 
 export async function logOut() {
-	await firebase
+	await fb
 		.auth()
 		.signOut()
 		.catch((e) => Alert.alert('Ooops', e.message));
 }
+
+export const deleteAccount = async () => {
+	const currentUser = fb.auth().currentUser;
+	await fb.firestore().collection('users').doc(currentUser?.uid!).delete();
+	await currentUser?.delete();
+};
