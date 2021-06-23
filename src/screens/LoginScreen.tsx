@@ -16,14 +16,16 @@ const LoginScreen: FunctionComponent<LoginScreenNavigationProp> = ({ route, navi
 
 	const handleLogInPress = async () => {
 		setLogInLoading(true);
-		await signIn(username, password);
-		setLogInLoading(false);
+		await signIn(username, password).catch(() => {
+			setLogInLoading(false);
+		});
 	};
 
 	const handleSignUpPress = async () => {
 		setSignUpLoading(true);
-		await register(username, password);
-		setSignUpLoading(false);
+		await register(username, password).catch(() => {
+			setSignUpLoading(false);
+		});
 	};
 
 	return (
@@ -54,7 +56,7 @@ const LoginScreen: FunctionComponent<LoginScreenNavigationProp> = ({ route, navi
 						onPress={handleLogInPress}
 						style={styles.touchableButtons}
 					>
-						{logInLoading ? <LoadingIndicator /> : <Text style={{color: 'white'}}>Login in</Text>}
+						{logInLoading ? <LoadingIndicator /> : <Text style={{ color: 'white' }}>Login in</Text>}
 					</TouchableOpacity>
 				</View>
 
@@ -64,7 +66,7 @@ const LoginScreen: FunctionComponent<LoginScreenNavigationProp> = ({ route, navi
 						onPress={handleSignUpPress}
 						style={styles.touchableButtons}
 					>
-						{signUpLoading ? <LoadingIndicator /> : <Text style={{color: 'white'}}>Sign up</Text>}
+						{signUpLoading ? <LoadingIndicator /> : <Text style={{ color: 'white' }}>Sign up</Text>}
 					</TouchableOpacity>
 				</View>
 			</View>
