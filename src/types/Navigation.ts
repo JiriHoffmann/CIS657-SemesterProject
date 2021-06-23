@@ -1,5 +1,5 @@
 import { BottomTabNavigationProp, BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
+import { CompositeNavigationProp, NavigatorScreenParams, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
 import { BeerLocation } from './BeerMapping';
 import { ChatMember } from './Chat';
@@ -7,9 +7,9 @@ import { ChatMember } from './Chat';
 // Main Router
 export type RootStackParamList = {
 	Login: undefined;
-	BottomTabs: undefined;
-	Favourites: {placeName: string}
-	PlaceDetail: { placeInfo: BeerLocation };
+	BottomTabs: NavigatorScreenParams<BottomTabParamList>;
+	Favourites: { placeName: string };
+	PlaceDetail: { placeInfo: BeerLocation; isFavourited?: boolean; showMap?: boolean };
 	ChatDetail: { newChatUsers?: ChatMember[]; chatName?: string; chatID?: string };
 };
 
@@ -20,7 +20,7 @@ export type ChatDetailScreenNavigationProp = StackScreenProps<RootStackParamList
 // BottomTabRouter
 export type BottomTabParamList = {
 	Map: undefined;
-	Favourites: {placeName: BeerLocation};
+	Favourites: { placeName: BeerLocation };
 	Chat: undefined;
 	Settings: undefined;
 };

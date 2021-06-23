@@ -1,36 +1,45 @@
-import firebase from 'firebase';
-import 'firebase/database'
-import { firebaseConfig } from './FirebaseCredentials'
+import { BeerLocation } from '../../types/BeerMapping';
+import { fb } from './login';
 
+const USERS = 'users';
+const FAVOURITES = 'favourites';
+const USERS_COLLECTION = fb.firestore().collection(USERS);
 
-export function writeData (item: any) {
-    var time = new Date().toString()
-    var myArray = [item, time]
-    firebase.database().ref(`favoriteData/`).push(myArray);
-}
+export const saveFavourite = async (userID: string, item: BeerLocation) => {
+	const timestamp = Date.now();
+	return USERS_COLLECTION.doc(userID)
+		.collection(FAVOURITES)
+		.doc(item.id)
+		.set({ ...item, timestamp });
+};
 
-export function deleteFavorite(item: any){
-    
-    firebase.database().ref(`favoriteData/${item.id}`).remove();
-}
+export const deleteFavourite = async (userID: string, id: string) => {
+	return USERS_COLLECTION.doc(userID).collection(FAVOURITES).doc(id).delete();
+};
 
-export function setUpListener(updateFunc: any){
-    firebase
-    .database()
-    .ref(`favoriteData/`)
-    .on('value', (snapshot) => {
-        console.log('Data is ', snapshot);
-        if(snapshot?.val()){
-            const fbObject = snapshot.val();
-            const newArr: string | any = [];
-            Object.keys(fbObject).map((key, index) => {
-                console.log(key, '||', index, '||', fbObject[key]);
-                //add way to check for duplicate so only one favorite shows up
-                newArr.push(fbObject[key]);
-            });
-            updateFunc(newArr);
-        } else{
-            updateFunc([]);
-        }
-    });
-}
+export const checkIfInFavourites = async (userID: string, id: string) => {
+	return USERS_COLLECTION.doc(userID)
+		.collection(FAVOURITES)
+		.doc(id)
+		.get()
+		.then((item) => item.exists)
+		.catch((error) => {
+			console.log('Error getting document:', error);
+			return false;
+		});
+};
+export const subscribeToFavouritesForUser = (
+	userID: string | null,
+	onChangeCallback: (favourites: BeerLocation[]) => void
+) => {
+	if (!userID) return () => {};
+	return USERS_COLLECTION.doc(userID)
+		.collection(FAVOURITES)
+		.orderBy('timestamp', 'desc')
+		.onSnapshot((snapshot) => {
+			const locations = snapshot.docs.map((doc) => {
+				return doc.data();
+			});
+			onChangeCallback(locations as BeerLocation[]);
+		});
+};
