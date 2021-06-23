@@ -17,56 +17,12 @@ const SettingsScreen: FunctionComponent<MapScreenNavigationProp> = ({ route, nav
 		setLogOutLoading(false);
 	};
 
-	const test = async () => {
-		const message = {
-			content: 'Aaaaaaaaa',
-			id: 'vVbTZcj5LhZ3YtlXXKtr',
-			name: 'The best chat ever',
-			senderID: '9kSU5PGlKhbO7N9dQNKPyyoubCH3',
-			senderName: 'test2@test.com',
-			timestamp: 1624078813034
-		};
-		const doc = await fb.firestore().doc(`chats/${message.id}`).get();
-		const { members } = doc.data() as ChatDetail;
-		members
-			.filter((member) => member.id !== message.senderID)
-			.forEach((member) =>
-				fb
-					.firestore()
-					.doc(`users/${member.id}`)
-					.get()
-					.then((userDoc) => {
-						const { expoToken } = userDoc.data() as User;
-						if (expoToken) {
-							const data = {
-								to: expoToken,
-								sound: 'default',
-								body: `${message.senderName}: ${message.content}`,
-								title: message.name,
-								data: {
-									id: message.id,
-									name: message.name
-								}
-							};
-							return fetch('https://exp.host/--/api/v2/push/send', {
-								method: 'POST',
-								headers: {
-									'Content-Type': 'application/json'
-								},
-								body: JSON.stringify(data)
-							});
-						} else {
-							return new Promise(() => {});
-						}
-					})
-			);
-	};
 	return (
 		<View style={styles.buttonContainer}>
 			<View style={{ ...styles.buttons, backgroundColor: theme.beerColor }}>
-				 <TouchableOpacity disabled={logOutLoading} onPress={handleLogOutPress} style={styles.touchableButtons}>
-					{logOutLoading ? <LoadingIndicator /> : <Text style={{color: 'white'}}>Log Out</Text>}
-				</TouchableOpacity> 
+				<TouchableOpacity disabled={logOutLoading} onPress={handleLogOutPress} style={styles.touchableButtons}>
+					{logOutLoading ? <LoadingIndicator /> : <Text style={{ color: 'white' }}>Log Out</Text>}
+				</TouchableOpacity>
 			</View>
 		</View>
 	);
@@ -103,7 +59,7 @@ const styles = StyleSheet.create({
 		width: '100%',
 		height: '100%',
 		justifyContent: 'center',
-		alignItems: 'center',
+		alignItems: 'center'
 	}
 });
 
