@@ -52,6 +52,18 @@ const FavouritesScreen: FunctionComponent<FavouritesScreenNavigationProp> = ({ n
 								</Text>
 								<Text
 									style={{
+										textAlign: 'left',
+										marginRight: 10,
+										fontStyle: 'italic',
+										color: 'blue',
+										fontSize: 14,
+										marginBottom: 15
+									}}
+								>
+									{item.phone}
+								</Text>
+								<Text
+									style={{
 										textAlign: 'right',
 										marginRight: 10,
 										fontStyle: 'italic',
@@ -59,7 +71,7 @@ const FavouritesScreen: FunctionComponent<FavouritesScreenNavigationProp> = ({ n
 										fontSize: 12
 									}}
 								>
-									{item.street}
+									{item.street}, {item.city}, {item.state}, {item.zip}
 								</Text>
 							</Divider>
 						</Pressable>
