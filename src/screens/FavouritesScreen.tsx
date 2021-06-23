@@ -1,9 +1,10 @@
 import React, { FunctionComponent, useContext, useState } from 'react';
 import { useEffect } from 'react';
-import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Divider } from 'react-native-elements';
 import { Tile } from 'react-native-elements/dist/tile/Tile';
 import { subscribeToFavouritesForUser } from '../api/firebase/favorites';
+import { LoadingIndicator } from '../components/LoadingIndicator';
 import AppContext from '../contexts/AppContext';
 import { FavouritesScreenNavigationProp } from '../types';
 import { BeerLocation } from '../types/BeerMapping';
@@ -29,15 +30,14 @@ const FavouritesScreen: FunctionComponent<FavouritesScreenNavigationProp> = ({ n
 
 	return (
 		<View style={styles.container}>
-			{loading && <ActivityIndicator size={'large'} color={theme.beerColor} style={{ marginTop: 20 }} />}
+			{loading && <LoadingIndicator />}
 
 			<FlatList
 				keyExtractor={(item) => item.id}
 				data={brewery}
 				renderItem={({ item }) => {
 					return (
-						<Pressable 
-						onPress={() => handleFavouritePress(item)}>
+						<Pressable onPress={() => handleFavouritePress(item)}>
 							<Divider>
 								<Text
 									style={{
