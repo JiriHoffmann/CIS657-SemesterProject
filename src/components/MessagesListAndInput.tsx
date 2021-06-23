@@ -2,12 +2,12 @@ import React, { Dispatch, FunctionComponent, SetStateAction, useContext, useLayo
 import { Dimensions, FlatList, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Pressable } from 'react-native';
 import { TextInput } from 'react-native';
-import { ActivityIndicator } from 'react-native';
 import Animated, { runOnJS, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import { MaterialIcons } from '@expo/vector-icons';
 import AppContext from '../contexts/AppContext';
 import { useKeyboardListener } from '../scripts/useKeyboard';
 import { Message } from '../types/Chat';
+import { LoadingIndicator } from './LoadingIndicator';
 
 const FETCH_MORE_DISTANCE = 50;
 
@@ -111,7 +111,7 @@ const MessagesListAndInput: FunctionComponent<Props> = ({
 	const AnimatedFooter = () => {
 		return (
 			<Animated.View style={footerStyle}>
-				<ActivityIndicator color={theme.beerColor} size={'large'} />
+				<LoadingIndicator />
 			</Animated.View>
 		);
 	};
@@ -125,7 +125,7 @@ const MessagesListAndInput: FunctionComponent<Props> = ({
 			<TextInput ref={hiddenTextInputRef} style={styles.fakeInput} />
 
 			{/* Loading indicator */}
-			{loading && messages.length === 0 && <ActivityIndicator color={theme.beerColor} size='large' />}
+			{loading && messages.length === 0 && <LoadingIndicator />}
 
 			<View style={{ ...styles.listAndInputContainer, marginBottom: keyboardShown ? keyboardHeight + 40 : 0 }}>
 				{/* TEXT INPUT */}

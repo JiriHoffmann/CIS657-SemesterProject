@@ -1,8 +1,9 @@
 import React, { FunctionComponent, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useContext } from 'react';
-import { ActivityIndicator, Alert, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { findUserByEmail, subscribeToChatsForUser } from '../api/firebase/chat';
 import { ChatPreviewTab } from '../components/ChatPreviewTab';
+import { LoadingIndicator } from '../components/LoadingIndicator';
 import AppContext from '../contexts/AppContext';
 import { useKeyboardListener } from '../scripts/useKeyboard';
 import { ChatScreenNavigationProp } from '../types';
@@ -85,7 +86,7 @@ const ChatScreen: FunctionComponent<ChatScreenNavigationProp> = ({ navigation })
 
 	return (
 		<View style={styles.container}>
-			{loading && <ActivityIndicator size={'large'} color={theme.beerColor} style={{ marginTop: 20 }} />}
+			{loading && <LoadingIndicator />}
 			<FlatList
 				showsVerticalScrollIndicator={false}
 				style={styles.chatPreviewTabContainer}
@@ -148,7 +149,7 @@ const ChatScreen: FunctionComponent<ChatScreenNavigationProp> = ({ navigation })
 							disabled={addUserLoading}
 						>
 							{addUserLoading ? (
-								<ActivityIndicator size={'large'} color={'white'} />
+								<LoadingIndicator />
 							) : (
 								<Text style={styles.addNewUserAddButtonText}>Add</Text>
 							)}
