@@ -137,23 +137,35 @@ const styles = StyleSheet.create({
 		justifyContent: 'flex-start'
 	},
 	text: {
-		marginTop: 20,
+		marginTop: 10,
 		textAlign: 'center',
-		fontSize: 30,
+		fontSize: 25,
 		fontWeight: 'bold',
 		marginBottom: 20
 	},
 	text2: {
 		marginTop: 20,
 		textAlign: 'center',
-		fontSize: 30,
+		fontSize: 25,
 		fontWeight: 'bold',
-		marginBottom: 40
+		marginBottom: 30
+	},
+	text3: {
+		textAlign: 'center',
+		fontSize: 20,
+		fontWeight: 'bold',
+		marginBottom: 10
+	},
+	text4: {
+		textAlign: 'center',
+		fontSize: 20,
+		fontWeight: 'bold',
+		marginBottom: 20
 	},
 	title: {
-		marginTop: 20,
+		marginTop: 10,
 		textAlign: 'center',
-		fontSize: 36,
+		fontSize: 30,
 		fontWeight: 'bold',
 		fontStyle: 'italic',
 		marginBottom: 50
@@ -178,9 +190,11 @@ const styles = StyleSheet.create({
 		shadowRadius: 3.84
 	},
 	buttonContainer: {
-		width: '86%',
+		width: '100%',
 		flexDirection: 'row',
-		marginTop: 30
+		marginTop: 30,
+		alignItems: 'center',
+		justifyContent: 'center'
 	},
 	touchableButtons: {
 		width: 300,
@@ -189,8 +203,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center'
 	},
 	textInput: {
-		marginTop: 40,
-		marginBottom: 40,
+		marginTop: 20,
 		alignContent: 'center',
 		textAlign: 'center',
 		width: '86%',
