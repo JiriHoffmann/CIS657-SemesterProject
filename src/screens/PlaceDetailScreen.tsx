@@ -8,6 +8,7 @@ import { deleteFavourite, saveFavourite } from '../api/firebase/favorites';
 import { LoadingIndicator } from '../components/LoadingIndicator';
 import AppContext from '../contexts/AppContext';
 import { PlaceDetailScreenNavigationProp } from '../types';
+import { Card } from 'react-native-elements';
 
 const PlaceDetailScreen: FunctionComponent<PlaceDetailScreenNavigationProp> = ({ route, navigation }) => {
 	const placeInfo = route.params.placeInfo;
@@ -99,17 +100,25 @@ const PlaceDetailScreen: FunctionComponent<PlaceDetailScreenNavigationProp> = ({
 
 	return (
 		<View style={{ ...styles.container, backgroundColor: theme.background }}>
-			<Text style={styles.title}>{JSON.stringify(placeInfo.name)}</Text>
-			<Text style={styles.text}>Overall Rating: {overallRating}</Text>
-			<Text style={styles.text}>User Rating: {userRating}</Text>
-			<Input
-				style={styles.rating}
-				placeholder={'Enter a Rating'}
-				onChangeText={setRating}
-				value={rating}
-				errorStyle={{ color: 'red' }}
-				errorMessage={checkRating(rating)}
-			></Input>
+			<Card  containerStyle={{backgroundColor: '#FFF7D5'}}>
+				<Text style={styles.title}>{JSON.stringify(placeInfo.name)}</Text>
+			<Card.Divider/>
+				<Text style={styles.text}>Overall Rating: {overallRating}</Text>
+				<Text style={styles.text2}>User Rating: {userRating}</Text>
+			<Card.Divider/>
+				<Input
+					inputContainerStyle={{borderBottomWidth: 0, width: 350}}
+					style={{
+						...styles.textInput,
+						backgroundColor: theme.elevation1
+					}}
+					placeholder={'Enter a Rating'}
+					onChangeText={setRating}
+					value={rating}
+					errorStyle={{ color: 'red' }}
+					errorMessage={checkRating(rating)}
+				></Input>
+			</Card>
 			<View style={styles.buttonContainer}>
 				<View style={{ ...styles.buttons, backgroundColor: theme.beerColor }}>
 					<TouchableOpacity disabled={submitLoading} onPress={handleSubmit} style={styles.touchableButtons}>
@@ -131,15 +140,25 @@ const styles = StyleSheet.create({
 	text: {
 		marginTop: 20,
 		textAlign: 'center',
-		fontSize: 35,
-		fontWeight: 'bold'
+		fontSize: 30,
+		fontWeight: 'bold',
+		marginBottom: 20
+	},
+	text2: {
+		marginTop: 20,
+		textAlign: 'center',
+		fontSize: 30,
+		fontWeight: 'bold',
+		marginBottom: 40
 	},
 	title: {
 		marginTop: 20,
 		textAlign: 'center',
-		fontSize: 35,
+		fontSize: 36,
 		fontWeight: 'bold',
-		fontStyle: 'italic'
+		fontStyle: 'italic',
+		fontFamily: 'Helvetica',
+		marginBottom: 50
 	},
 	rating: {
 		marginTop: 25,
@@ -163,14 +182,35 @@ const styles = StyleSheet.create({
 	buttonContainer: {
 		width: '86%',
 		flexDirection: 'row',
-		marginTop: 20
+		marginTop: 30
 	},
 	touchableButtons: {
 		width: 300,
 		height: 30,
 		justifyContent: 'center',
 		alignItems: 'center'
-	}
+	},
+	textInput: {
+		marginTop: 40,
+		marginBottom: 40,
+		alignContent: 'center',
+		textAlign: 'center',
+		width: '86%',
+		height: 55,
+		paddingHorizontal: 20,
+		paddingVertical: 10,
+		marginVertical: 10,
+		borderRadius: 20,
+		shadowColor: '#000',
+		shadowOffset: {
+			width: 0,
+			height: 2
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 3.84,
+
+		elevation: 5
+	},
 });
 
 export { PlaceDetailScreen };
