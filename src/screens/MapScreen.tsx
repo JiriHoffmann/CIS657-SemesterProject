@@ -3,18 +3,18 @@ import { Dimensions, StyleSheet, View } from 'react-native';
 import MapView, { Marker, Region } from 'react-native-maps';
 import { MaterialIcons } from '@expo/vector-icons';
 import { fetchBeerLocations } from '../api/beermapping/API';
+import { getOverallRating } from '../api/firebase/detail';
 import { LocationSearchButton } from '../components/LocationSearchButton';
 import { MapZoomInIndicator } from '../components/MapZoomInIndicator';
 import AppContext from '../contexts/AppContext';
 import { MapScreenNavigationProp } from '../types';
 import { BeerLocation, UserLocation } from '../types/BeerMapping';
-import { getOverallRating } from '../api/firebase/detail';
 
 const INITIAL_REGION = {
-	latitude: 42.460584030103824,
-	longitude: -86.22584420479463,
-	latitudeDelta: 3,
-	longitudeDelta: 3
+	latitude: 42.96058506728029,
+	latitudeDelta: 0.2756527083497531,
+	longitude: -85.67288858816028,
+	longitudeDelta: 0.18000002950431337
 };
 
 const MapScreen: FunctionComponent<MapScreenNavigationProp> = ({ route, navigation }) => {
@@ -25,7 +25,7 @@ const MapScreen: FunctionComponent<MapScreenNavigationProp> = ({ route, navigati
 	const [mapRegion, setMapRegion] = useState<Region>(INITIAL_REGION);
 	const [beerLocations, setBeerLocations] = useState<BeerLocation[]>([]);
 	const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
-	const [overallRate, setOverallRating] = useState(0)
+	const [overallRate, setOverallRating] = useState(0);
 
 	useEffect(() => {
 		if (userLocation) {
@@ -53,13 +53,11 @@ const MapScreen: FunctionComponent<MapScreenNavigationProp> = ({ route, navigati
 		}
 	};
 
-	const handleMarkerPress = (location: BeerLocation) => {
-		async function oRating(){
-			const overallrating: any = await getOverallRating(location.name)
-			const myOverallRate: number = Number(overallrating.rating)
-			setOverallRating(myOverallRate)
-		}
-		oRating()
+	const handleMarkerPress = async (location: BeerLocation) => {
+		const overallrating: any = await getOverallRating(location.name);
+		const myOverallRate: number = Number(overallrating.rating);
+		setOverallRating(myOverallRate);
+
 		animateToLocation(location.lat, location.lon);
 	};
 
@@ -93,7 +91,7 @@ const MapScreen: FunctionComponent<MapScreenNavigationProp> = ({ route, navigati
 				{beerLocations.map((loc) => (
 					<Marker
 						key={loc.id}
-						coordinate={{latitude: loc.lat, longitude: loc.lon }}
+						coordinate={{ latitude: loc.lat, longitude: loc.lon }}
 						title={loc.name}
 						description={'Rating: ' + overallRate}
 						onPress={() => handleMarkerPress(loc)}
